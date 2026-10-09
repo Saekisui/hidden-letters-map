@@ -1,11 +1,11 @@
-# 藏信地图 · hidden-letters-map
+# 藏宝地图 · hidden-letters-map
 
-<p align="center"><img src="docs/cover.png" alt="藏信地图：把信、语音、徽章藏在真实的地方，对方走到附近才拿得到" width="100%"></p>
+<p align="center"><img src="docs/cover.png" alt="藏宝地图：把信、语音、成就藏在真实的地方，对方走到附近才拿得到" width="100%"></p>
 
-把信、一段语音、一枚徽章藏在真实的地方。对方的地图上只看得到一片模糊的圈和一句谜语，人走到附近才拿得到。
+把信、一段语音、一个成就藏在真实的地方。对方的地图上只看得到一片模糊的圈和一句谜语，人走到附近才拿得到。
 
-- **藏信人**：在某个地方藏东西、画旅行路线、直接发徽章。用 Claude Code / Claude Desktop 之类的 MCP 客户端操作，或者直接 curl。
-- **找信人**：手机上开一个网页（加到主屏幕当 app 用）。地图上有计划路线、自己的位置和足迹、雾圈和谜语；走进圈里，信封就能拆；拆开过的进详情页；拿到的徽章挂在徽章墙上；还能在自己站的地方钉一枚「我来过」留一句话。
+- **藏宝人**：在某个地方藏东西、画旅行路线、直接发成就。用 Claude Code / Claude Desktop 之类的 MCP 客户端操作，或者直接 curl。
+- **寻宝人**：手机上开一个网页（加到主屏幕当 app 用）。地图上有计划路线、自己的位置和足迹、雾圈和谜语；走进圈里，信封就能拆；拆开过的进详情页；拿到的成就挂在成就墙上；还能在自己站的地方钉一枚「我来过」留一句话。
 
 封着的信，页面拿到的数据里没有地名、坐标、正文，开发者工具里也偷看不到。
 
@@ -22,7 +22,7 @@ npm run build            # 页面打到 dist/
 npm start                # 默认 http://localhost:3000
 ```
 
-浏览器打开，输密码进去。找信人的手机要能从外面访问这个地址——放在一台有公网地址的机器上，或者用 Cloudflare Tunnel / Tailscale Funnel 之类把家里的机器露出去。**位置上报和推送都要求 https。**
+浏览器打开，输密码进去。寻宝人的手机要能从外面访问这个地址——放在一台有公网地址的机器上，或者用 Cloudflare Tunnel / Tailscale Funnel 之类把家里的机器露出去。**位置上报和推送都要求 https。**
 
 iPhone 上：Safari 打开 → 分享 → 添加到主屏幕。从主屏幕打开才是全屏、才能收推送。
 
@@ -33,7 +33,7 @@ iPhone 上：Safari 打开 → 分享 → 添加到主屏幕。从主屏幕打�
 | `PASSWORD` | 必填。页面登录、MCP、定位 App 上报都用它 |
 | `PORT` | 默认 3000 |
 | `DATA_DIR` | 数据目录，默认 `./data` |
-| `HIDER_NAME` / `FINDER_NAME` | 页面上怎么称呼两个人：信的落款「—— 阿笙」、徽章上一圈「FOR 小满 · WITH LOVE」 |
+| `HIDER_NAME` / `FINDER_NAME` | 页面上怎么称呼两个人：信的落款「—— 阿笙」、成就上一圈「FOR 小满 · WITH LOVE」 |
 | `TZ` | 「来过几天才解锁」按哪个时区算一天，不填按系统时区 |
 | `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` / `VAPID_SUBJECT` | 推送用，可选，见下面 |
 
@@ -47,10 +47,10 @@ iPhone 上：Safari 打开 → 分享 → 添加到主屏幕。从主屏幕打�
 
 | 工具 | 干什么 |
 |---|---|
-| `hide_at_place` | 在一个地方藏东西：信 `letter`、语音 `voice_url` + `voice_text`、徽章 `badge_*`，至少一样。`radius_m` 走进多少米算到；`visits_needed` 要来几天才解锁（健身房 5 次那种） |
-| `award_badge` | 直接发一枚徽章，不藏 |
+| `hide_at_place` | 在一个地方藏东西：信 `letter`、语音 `voice_url` + `voice_text`、成就 `badge_*`，至少一样。`radius_m` 走进多少米算到；`visits_needed` 要来几天才解锁（健身房 5 次那种） |
+| `award_badge` | 直接发一个成就，不藏 |
 | `add_route_stop` | 路线上加一站（按天） |
-| `trip_map` | 看全貌：路线、藏了什么、拆没拆、发过的徽章、对方钉的图钉 |
+| `trip_map` | 看全貌：路线、藏了什么、拆没拆、发过的成就、对方钉的图钉 |
 | `remove_from_map` | 删站点 / 收回还没被找到的 |
 
 地名 → 坐标走 OpenStreetMap Nominatim。**地址用英文或当地语言、带上城市**（`Museo Frida Kahlo, Coyoacán, Mexico City`），纯中文地名经常查到别的国家去。查错了就 `remove_from_map` 收回，带 `lat` / `lon` 重藏。
@@ -89,10 +89,10 @@ curl -H "Authorization: Bearer 你的密码" -H "content-type: application/json"
 
 | 方法 | 路径 | 说明 |
 |---|---|---|
-| `GET` | `/api/travel-map/full` | 全貌（藏信人看的，含正文） |
+| `GET` | `/api/travel-map/full` | 全貌（藏宝人看的，含正文） |
 | `POST` | `/api/travel-map/letters` | 藏东西：`place` `hint` 必填；`body` / `voice: {url, text}` / `badge: {name, emoji, note}` 至少一样；`lat` `lon` `radiusM` `visitsNeeded` |
 | `POST` | `/api/travel-map/stops` | 加站：`date`（YYYY-MM-DD）`name` `lat` `lon` `note` `trip` |
-| `POST` | `/api/travel-map/badges` | 发徽章：`name` `emoji` `note` |
+| `POST` | `/api/travel-map/badges` | 发成就：`name` `emoji` `note` |
 | `DELETE` | `/api/travel-map/:id` | 删站点 / 收回封着的信 / 拔图钉。已经被找到的信收不回 |
 
 语音这一项只收一个**现成的音频地址**（https 的 mp3 / m4a），这边不合成。
@@ -101,7 +101,7 @@ curl -H "Authorization: Bearer 你的密码" -H "content-type: application/json"
 
 ## 定位：从哪来，自己选
 
-这是整个东西里唯一要你做取舍的地方。「走到附近信就到手」靠的是 server 知道找信人在哪，而**手机上的位置怎么到 server，不止一种做法，各有代价**：
+这是整个东西里唯一要你做取舍的地方。「走到附近信就到手」靠的是 server 知道寻宝人在哪，而**手机上的位置怎么到 server，不止一种做法，各有代价**：
 
 | 做法 | 要装什么 | 后台能跑吗 | 代价 |
 |---|---|---|---|
@@ -144,19 +144,19 @@ curl -H "Authorization: Bearer 你的密码" -H "content-type: application/json"
 
 ### 为什么不接「查找」/ 家人共享
 
-能从别人的 Apple ID 拉位置的办法都要对方把账号和二次验证交出来，而且走的是非官方接口，Apple 一改就断。这个项目不做这条，模型反过来：**找信人在自己手机上装一个 App、选择把位置推到哪，随时能关。**
+能从别人的 Apple ID 拉位置的办法都要对方把账号和二次验证交出来，而且走的是非官方接口，Apple 一改就断。这个项目不做这条，模型反过来：**寻宝人在自己手机上装一个 App、选择把位置推到哪，随时能关。**
 
 ---
 
 ## 推送（可选）
 
-走到圈里时 server 推一条通知到找信人的手机。不配也能用，只是没有这一下。
+走到圈里时 server 推一条通知到寻宝人的手机。不配也能用，只是没有这一下。
 
 ```bash
 npx web-push generate-vapid-keys
 ```
 
-把两串 key 填进 `.env` 的 `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY`，重启。找信人在页面底栏点「开通知」，允许一次就行。
+把两串 key 填进 `.env` 的 `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY`，重启。寻宝人在页面底栏点「开通知」，允许一次就行。
 
 iPhone 上要先把页面加到主屏幕、从主屏幕打开，Safari 里直接开是不支持 Web Push 的。推送内容只有一句「你走到了 xx 附近」，信的内容不进推送。
 
@@ -164,8 +164,8 @@ iPhone 上要先把页面加到主屏幕、从主屏幕打开，Safari 里直接
 
 ## 数据与隐私
 
-- 全部数据在 `data/` 下的几个 JSON 文件里，没有数据库：`map.json`（站点 / 信 / 徽章 / 图钉）、`track.jsonl`、`last-seen.json`、`push-subscriptions.json`。备份就是拷这个目录。
-- 找信人的页面只拿 `/api/travel-map`，封着的信只有模糊圈（半径是信的 3 倍、圆心随机偏开）、谜语、藏了哪几样。
+- 全部数据在 `data/` 下的几个 JSON 文件里，没有数据库：`map.json`（站点 / 信 / 成就 / 图钉）、`track.jsonl`、`last-seen.json`、`push-subscriptions.json`。备份就是拷这个目录。
+- 寻宝人的页面只拿 `/api/travel-map`，封着的信只有模糊圈（半径是信的 3 倍、圆心随机偏开）、谜语、藏了哪几样。
 - 地图瓦片来自 OpenStreetMap 官方服务器，字体来自 Google Fonts 和 jsDelivr（霞鹜文楷）。不想出网就把 `web/letters.css` 顶上两行 `@import` 换成自己的。
 
 ---
@@ -176,7 +176,7 @@ iPhone 上要先把页面加到主屏幕、从主屏幕打开，Safari 里直接
 letters.js            纯逻辑：距离、模糊圈、创建、到访判定、脱敏视图（有测试）
 server.js             Express：文件读写、鉴权、位置入口、推送
 mcp/letters-mcp.js    MCP server，只走 HTTP 到 server.js
-web/LettersPage.jsx   找信人的页面（React + Leaflet）
+web/LettersPage.jsx   寻宝人的页面（React + Leaflet）
 web/letters.css
 web/preview.jsx       假数据预览：npm run dev 后开 http://localhost:5173/preview.html，不用起 server
 public/               登录页、sw.js、manifest、图标

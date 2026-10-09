@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<title>藏信地图 · 封面</title>
+<title>藏宝地图 · 封面</title>
 <!-- 仓库封面（1280×640，GitHub social preview 的尺寸）。改完用无头 Chrome 出图：
      "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --disable-gpu --hide-scrollbars \
        --force-device-scale-factor=2 --window-size=1280,640 --virtual-time-budget=12000 --screenshot=docs/cover.png file://$PWD/docs/cover.html -->
@@ -62,13 +62,13 @@
   </svg>
 
   <div class="text">
-    <div class="eyebrow">Letters along the way</div>
-    <h1>藏信地图</h1>
-    <p class="lead">把信、语音、徽章藏在真实的地方，<br/>对方走到附近才拿得到。</p>
+    <div class="eyebrow">Treasures along the way</div>
+    <h1>藏宝地图</h1>
+    <p class="lead">把信、语音、成就藏在真实的地方，<br/>对方走到附近才拿得到。</p>
     <div class="tags">
       <span class="tag t-letter"><svg viewBox="-13 -10 26 20"><g id="tag-env"></g></svg>信</span>
       <span class="tag t-voice"><svg viewBox="0 0 18 18"><g fill="none" stroke="#7d5f68" stroke-width="1.6" stroke-linecap="round"><path d="M3 7v4M6.5 4v10M10 6.5v5M13.5 3v12M17 7.5v3"/></g></svg>语音</span>
-      <span class="tag t-badge"><svg viewBox="-10 -10 20 20"><g id="tag-coin"></g></svg>徽章</span>
+      <span class="tag t-badge"><svg viewBox="-10 -10 20 20"><g id="tag-coin"></g></svg>成就</span>
     </div>
     <div class="steps">hide it<i></i>walk there<i></i>open it</div>
   </div>
@@ -135,7 +135,7 @@ S.push(`<g fill="none" stroke="#e6d8d3" stroke-linecap="round" stroke-width="11"
 </g>
 <g fill="none" stroke="#dccbc6" stroke-width="2"><path d="M-20 260C120 250 200 300 330 270S520 230 640 250"/><path d="M160 -20C190 120 150 260 200 400S180 520 220 570"/></g>
 <path d="M330 330c60-30 140 0 150 60s-60 90-120 70-90-100-30-130Z" fill="#ead9d3" opacity=".8"/>`);
-// 上角：计数 + 徽章圆钮
+// 上角：计数 + 成就圆钮
 S.push(`<text x="26" y="40" font-family="Songti SC, STSong, serif" font-size="13" letter-spacing="1.5" fill="#9a8388"><tspan font-family="Cormorant Garamond, Georgia, serif" font-weight="600" font-size="16" fill="#4c363d">2</tspan> 处还藏着 <tspan fill="#d2bfb9"> | </tspan> <tspan font-family="Cormorant Garamond, Georgia, serif" font-weight="600" font-size="16" fill="#4c363d">1</tspan> 处找到了</text>`);
 S.push(`<g transform="translate(560 40)" filter="url(#lmDrop)"><circle r="22" fill="#f4eee5" stroke="#dfd0ca"/><circle r="22" fill="url(#lmGrainP)"/><g transform="scale(1.15)">${coin(11.5, "★")}</g><circle cx="17" cy="-16" r="10" fill="#4c363d" stroke="#f4eee5" stroke-width="1.5"/><text x="17" y="-11.5" font-family="Cormorant Garamond, Georgia, serif" font-weight="600" font-size="13" text-anchor="middle" fill="#f4eee5">3</text></g>`);
 // 路线：1 飞到 2，2 走到 3；足迹从 3 走进雾圈
@@ -156,7 +156,7 @@ S.push(`<g transform="translate(356 318)"><circle r="26" fill="${ACCENT}" opacit
 S.push(tag(372, 334, "HERE", "你就在这片圈里", { w: 150, rot: -3, kc: ACCENT_DEEP }));
 // 拆开过的：旧金币气泡 + 证书签
 S.push(bubble(468, 466, 1.2, coin(11.5, "🌮"), { bg: "#f2e9d4" }));
-S.push(tag(396, 474, "OPENED · 解锁徽章", "科约阿坎集市 · 集市小探员", { w: 198, rot: -2, kc: "#7e6233" }));
+S.push(tag(396, 474, "OPENED · 解锁成就", "科约阿坎集市 · 集市小探员", { w: 198, rot: -2, kc: "#7e6233" }));
 // 我来过：小图钉 + 留言
 S.push(bubble(96, 470, 1.0, pushpin(0, 0, 0.82), { bg: "#f4eee5" }));
 S.push(tag(112, 418, "I WAS HERE", "这家冰淇淋店超好吃，下次带你来", { w: 232, rot: 1.5, kc: "#4c363d", hand: true }));

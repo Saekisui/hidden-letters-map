@@ -39,7 +39,7 @@ test("createLetter：半径夹在 50–20000，默认 200，缺字段报错", ()
   assert.throws(() => createLetter({ ...base, lat: 200 }));
 });
 
-test("一个地点可以只藏语音或只藏徽章，但不能什么都不藏", () => {
+test("一个地点可以只藏语音或只藏成就，但不能什么都不藏", () => {
   const base = { place: "蓝房子", ...CASA_AZUL, hint: "h" };
   const voiceOnly = createLetter({ ...base, voice: { url: "https://example.com/x.m4a", text: "hi" } });
   assert.deepEqual(contentsOf(voiceOnly), ["voice"]);
@@ -96,8 +96,8 @@ test("visitAt：普通的走到就找到；健身房那种一天记一次，攒�
   assert.equal(publicLetter(once).visitsNeeded, undefined, "普通的不带进度");
 });
 
-test("publicLetter：封着的只说藏了哪几样，找到给位置，拆开才给信 / 语音 / 徽章", () => {
-  const letter = createLetter({ place: "蓝房子", ...CASA_AZUL, hint: "谜语", body: "正文", voice: { url: "/v.m4a", text: "t" }, badge: { name: "徽章" } });
+test("publicLetter：封着的只说藏了哪几样，找到给位置，拆开才给信 / 语音 / 成就", () => {
+  const letter = createLetter({ place: "蓝房子", ...CASA_AZUL, hint: "谜语", body: "正文", voice: { url: "/v.m4a", text: "t" }, badge: { name: "成就" } });
   const sealed = publicLetter(letter);
   for (const k of ["place", "lat", "lon", "body", "radiusM", "voice", "badge"]) assert.ok(!(k in sealed), `sealed leaks ${k}`);
   assert.equal(sealed.hint, "谜语");
@@ -108,7 +108,7 @@ test("publicLetter：封着的只说藏了哪几样，找到给位置，拆开�
   const opened = publicLetter({ ...letter, status: "opened" });
   assert.equal(opened.body, "正文");
   assert.equal(opened.voice.url, "/v.m4a");
-  assert.equal(opened.badge.name, "徽章");
+  assert.equal(opened.badge.name, "成就");
 });
 
 test("createStop / sortStops：按日期、同日按加入顺序", () => {

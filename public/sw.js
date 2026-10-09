@@ -6,7 +6,7 @@ self.addEventListener("activate", (event) => event.waitUntil(self.clients.claim(
 self.addEventListener("push", (event) => {
   let data = {};
   try { data = event.data ? event.data.json() : {}; } catch { data = {}; }
-  event.waitUntil(self.registration.showNotification(data.title || "藏信地图", {
+  event.waitUntil(self.registration.showNotification(data.title || "藏宝地图", {
     body: data.body || "",
     icon: "/icon.svg",
     badge: "/icon.svg",

@@ -3,7 +3,7 @@
 import { createRoot } from "react-dom/client";
 import "leaflet/dist/leaflet.css";
 import LettersPage from "./LettersPage.jsx";
-// 藏信地图假数据架子（不起第二个 server）：mock 掉 /api/travel-map* 和手机定位，整页照常跑。
+// 藏宝地图假数据架子（不起第二个 server）：mock 掉 /api/travel-map* 和手机定位，整页照常跑。
 // 场景：她在墨西哥城科约阿坎，附近两片雾圈、一处拆开过的、一枚她钉的图钉、今天走过的足迹；东京那边还有一处健身房 2/5。
 
 const HER = { lat: 19.3540, lon: -99.1630 };

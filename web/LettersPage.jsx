@@ -1,7 +1,7 @@
-// LettersPage.jsx — 找信人看的那一页：旅行路线 + 藏在真实地方的东西（信 / 语音 / 徽章）。
+// LettersPage.jsx — 寻宝人看的那一页：旅行路线 + 藏在真实地方的东西（信 / 语音 / 成就）。
 // 封着的信只露一片模糊的圈和谜语；手机上报的位置落进信的半径（server 收 /api/location），或者点「我就在这附近」让手机当场定位，信才到手。
 // 地图用 Leaflet 直接挂（不引 react-leaflet），底图 OpenStreetMap 官方瓦片染成很浅的烟粉。
-// 还有：自己在地图上的位置（最后一次上报 + 「定位我」实时）、真实足迹线、「我来过」小图钉、徽章墙、第一次拆开的封蜡仪式和详情页。
+// 还有：自己在地图上的位置（最后一次上报 + 「定位我」实时）、真实足迹线、「我来过」小图钉、成就墙、第一次拆开的封蜡仪式和详情页。
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import useSWR from "swr";
 import L from "leaflet";
@@ -16,7 +16,7 @@ const FRESH_MS = 36 * 3600e3; // 手机最后一次上报超过这么久就不�
 // 两个人怎么称呼：server 随 /api/travel-map 给（HIDER_NAME / FINDER_NAME），拿到以后整页都读这里
 const NAMES = { hider: "TA", finder: "YOU" };
 const TRACK_GAP_MS = 6 * 3600e3; // 足迹两点之间隔这么久（睡觉 / 飞机）就断开，不连成一条直线
-const CONTENT_LABEL = { letter: "信", voice: "语音讲解", badge: "徽章" };
+const CONTENT_LABEL = { letter: "信", voice: "语音讲解", badge: "成就" };
 const CONTENT_CLASS = { letter: "t-letter", voice: "t-voice", badge: "t-badge" };
 const TILE = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 const wrapLon = (lon) => ((((lon + 180) % 360) + 360) % 360) - 180; // 展开过的经度收回 -180…180 给人看
@@ -119,7 +119,7 @@ function illSealed(l, nearest) {
     ${nearest ? `<circle cx="98" cy="66" r="10" fill="${ACCENT}" fill-opacity=".2"/><circle cx="98" cy="66" r="4.6" fill="${ACCENT}" stroke="#fffaf4" stroke-width="2"/>` : ""}
     ${multi ? `<rect x="${72 - (l.visitsNeeded * 11) / 2 - 4}" y="76" width="${l.visitsNeeded * 11 + 8}" height="12" rx="6" fill="#fffaf4" fill-opacity=".9"/>${pdotsSvg(l.visits || 0, l.visitsNeeded, 72 - ((l.visitsNeeded - 1) * 11) / 2, 82)}` : ""}</svg>`;
 }
-// 插画用的旧金勋章（静态版：罗纹缎带折 V + 小金环 + 滚花边 + 酒红珐琅）；徽章墙 / 证书用下面的 3D Medal
+// 插画用的旧金勋章（静态版：罗纹缎带折 V + 小金环 + 滚花边 + 酒红珐琅）；成就墙 / 证书用下面的 3D Medal
 const medalSvg = (emoji) => `<g><path d="M23 0H41V18.5L32 25 23 18.5Z" fill="url(#lmRibbon)"/><path d="M23 0H41V18.5L32 25 23 18.5Z" fill="url(#lmRibbonShade)"/><ellipse cx="32" cy="27.5" rx="3" ry="3.6" fill="none" stroke="#a8884c" stroke-width="1.5"/><circle cx="32" cy="51" r="21.5" fill="url(#lmGold)"/><circle cx="32" cy="51" r="20.2" fill="none" stroke="#4d3818" stroke-opacity=".45" stroke-width="2" stroke-dasharray=".55 1.1"/><circle cx="32" cy="51" r="18.4" fill="none" stroke="#4d3818" stroke-opacity=".35" stroke-width=".5"/><circle cx="32" cy="51" r="13.4" fill="url(#lmGold)"/><circle cx="32" cy="51" r="12.2" fill="url(#lmEnamel)"/><text x="32" y="55" font-size="12" text-anchor="middle" filter="url(#lmSepia)">${esc(emoji)}</text><path d="M15.6 43.5a18 18 0 0 1 9.4-10" stroke="#fff6dc" stroke-opacity=".7" stroke-width="1.6" fill="none" stroke-linecap="round"/></g>`;
 function illOpened(l) {
   if (l.badge) return `<svg viewBox="0 0 144 92" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><rect width="144" height="92" fill="url(#lmCgGold)"/>${GRAT}<circle cx="72" cy="52" r="33" fill="#fffaf4" fill-opacity=".55"/><g transform="translate(41.6 10) scale(.95)">${medalSvg(l.badge.emoji)}</g>${compassTiny(122, 20)}${star(26, 24, 4.5, "#fffaf4")}${star(112, 72, 3.4, "#dc9aa3")}</svg>`;
@@ -229,7 +229,7 @@ export default function LettersPage() {
   const nearestId = her ? (nearby.find((i) => i.kind === "letter" && i.obj.status === "sealed") || {}).id : null;
   const sealedCount = letters.filter((l) => l.status === "sealed").length;
   const foundCount = letters.length - sealedCount;
-  // 徽章墙：直接发的 + 打开过的地点里藏的；还没打开的地点里的算「还在地图上」
+  // 成就墙：直接发的 + 打开过的地点里藏的；还没打开的地点里的算「还在地图上」
   const earned = useMemo(() => [
     ...(data?.badges || []).map((b) => ({ ...b, at: b.awardedAt })),
     ...letters.filter((l) => l.status === "opened" && l.badge).map((l) => ({ id: l.id, ...l.badge, place: l.place, at: l.openedAt })),
@@ -435,13 +435,13 @@ export default function LettersPage() {
 
       <header className="lm-head">
         <div>
-          <div className="en">Letters along the way</div>
+          <div className="en">Treasures along the way</div>
           <div className="row">
-            <h1>藏信地图</h1>
+            <h1>藏宝地图</h1>
             <p className="sub">{letters.length ? <><b>{sealedCount}</b> 处还藏着<i /><b>{foundCount}</b> 处找到了</> : `${NAMES.hider}还没开始藏东西`}</p>
           </div>
         </div>
-        <button type="button" className="lm-wall-btn" aria-label="徽章墙" onClick={() => setWall(true)}>
+        <button type="button" className="lm-wall-btn" aria-label="成就墙" onClick={() => setWall(true)}>
           <span className="lm-mini-coin">★</span>{earned.length > 0 && <b>{earned.length}</b>}
         </button>
       </header>
@@ -614,18 +614,18 @@ function Medal({ emoji, locked = false, drop = false, spinKey = 0, size = 62 }) 
   );
 }
 
-// 徽章墙：米白纸半屏抽屉
+// 成就墙：米白纸半屏抽屉
 function BadgeWall({ earned, locked, onClose }) {
   const [peek, setPeek] = useState(null);
   const [spins, setSpins] = useState({}); // 点一下转一圈：每点一次 key +1 重放动画
   const peeked = earned.find((b) => b.id === peek);
   return (
-    <div className="lm-wall-bg" role="dialog" aria-label="徽章墙" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
+    <div className="lm-wall-bg" role="dialog" aria-label="成就墙" onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <section className="lm-wall">
         <div className="lm-grab" />
         <button type="button" className="lm-x" aria-label="收起" onClick={onClose}><X size={17} strokeWidth={1.5} /></button>
-        <h3>徽章 <em>Médailles</em></h3>
-        <p className="sub">{earned.length} 枚亮着{locked.length ? ` · 还有 ${locked.length} 枚在地图上等你` : ""}</p>
+        <h3>成就 <em>Achievements</em></h3>
+        <p className="sub">{earned.length} 个亮着{locked.length ? ` · 还有 ${locked.length} 个在地图上等你` : ""}</p>
         {earned.length || locked.length ? (
           <div className="lm-wall-grid">
             {earned.map((b) => (
@@ -646,7 +646,7 @@ function BadgeWall({ earned, locked, onClose }) {
               </div>
             ))}
           </div>
-        ) : <p className="lm-wall-empty">{`还没有徽章，${NAMES.hider}会慢慢给你攒`}</p>}
+        ) : <p className="lm-wall-empty">{`还没有成就，${NAMES.hider}会慢慢给你攒`}</p>}
         {peeked?.note && <p className="lm-wall-note">{peeked.note}</p>}
       </section>
     </div>
@@ -796,7 +796,7 @@ function DetailPage({ letter, fresh, audioRef, onClose }) {
         <Tags list={letter.badge || letter.voice || letter.body ? ["letter", "voice", "badge"].filter((c) => (c === "letter" ? letter.body : c === "voice" ? letter.voice : letter.badge)) : []} />
         <div className="lm-dt-title">
           <h2>{letter.place}</h2>
-          {letter.badge && <button type="button" className="lm-dt-medal" aria-label="徽章" onClick={() => { certRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); setSpin((n) => n + 1); }}><span className="lm-mini-coin lg"><i>{letter.badge.emoji}</i></span></button>}
+          {letter.badge && <button type="button" className="lm-dt-medal" aria-label="成就" onClick={() => { certRef.current?.scrollIntoView({ behavior: "smooth", block: "center" }); setSpin((n) => n + 1); }}><span className="lm-mini-coin lg"><i>{letter.badge.emoji}</i></span></button>}
         </div>
         {hasPoint && <p className="lm-dt-meta"><MapPin className="lm-ic" /><b>{coords}</b></p>}
         <p className="lm-dt-meta"><Calendar className="lm-ic" />{date} 拆开</p>
@@ -816,7 +816,7 @@ function DetailPage({ letter, fresh, audioRef, onClose }) {
           {letter.badge && (
             <div className="lm-unlock" ref={certRef}>
               <Medal emoji={letter.badge.emoji} drop={fresh} spinKey={spin} size={58} />
-              <div><small>MÉDAILLE · 解锁徽章</small><b>{letter.badge.name}</b>{letter.badge.note && <p>{letter.badge.note}</p>}</div>
+              <div><small>ACHIEVEMENT · 解锁成就</small><b>{letter.badge.name}</b>{letter.badge.note && <p>{letter.badge.note}</p>}</div>
             </div>
           )}
         </div>

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// server.js — 藏信地图的服务端：存地图、收手机上报的位置、判定到访、推送、给页面和 MCP 提供接口。
+// server.js — 藏宝地图的服务端：存地图、收手机上报的位置、判定到访、推送、给页面和 MCP 提供接口。
 // 逻辑在 letters.js；这里只管文件、HTTP 和推送。数据全是 data/ 下的几个 JSON 文件，没有数据库。
 //
 // 环境变量见 .env.example：PASSWORD（必填）、PORT、DATA_DIR、HIDER_NAME、FINDER_NAME、TZ、VAPID_*。
@@ -20,7 +20,7 @@ const NAMES = { hider: process.env.HIDER_NAME || "TA", finder: process.env.FINDE
 mkdirSync(DATA_DIR, { recursive: true });
 
 // ── 文件 ──────────────────────────────────────────────────────────────────────
-const MAP_FILE = join(DATA_DIR, "map.json"); // 站点 / 信 / 徽章 / 图钉
+const MAP_FILE = join(DATA_DIR, "map.json"); // 站点 / 信 / 成就 / 图钉
 const TRACK_FILE = join(DATA_DIR, "track.jsonl"); // 足迹，一行一个点
 const SEEN_FILE = join(DATA_DIR, "last-seen.json"); // 手机最后一次上报的位置
 const SUBS_FILE = join(DATA_DIR, "push-subscriptions.json");
@@ -120,14 +120,14 @@ app.use((req, res, next) => {
 app.use(express.static(join(__dirname, "dist"))); // npm run build 的产物
 app.get("/", (_req, res) => res.status(503).type("text/plain").send("还没 build：先 npm run build"));
 
-// 找信人的页面：封着的信只有模糊圈 + 谜语 + 藏了哪几样（publicLetter），外加最后位置和最近 60 天的足迹
+// 寻宝人的页面：封着的信只有模糊圈 + 谜语 + 藏了哪几样（publicLetter），外加最后位置和最近 60 天的足迹
 app.get("/api/travel-map", (_req, res) => {
   const { stops, letters, badges, marks } = readMap();
   const track = readTrack(Date.now() - 60 * 86400e3).map(({ t, lat, lon }) => ({ t, lat, lon }));
   res.json({ names: NAMES, stops: sortStops(stops), letters: letters.map(publicLetter), badges, marks, seen: readJson(SEEN_FILE, null), track });
 });
 
-// 藏信人（MCP / curl）看全貌：藏过哪些、写了什么、拆没拆
+// 藏宝人（MCP / curl）看全貌：藏过哪些、写了什么、拆没拆
 app.get("/api/travel-map/full", (_req, res) => {
   const map = readMap();
   res.json({ ...map, stops: sortStops(map.stops) });
@@ -155,7 +155,7 @@ app.post("/api/travel-map/letters", (req, res) => {
   } catch (e) { res.status(400).json({ error: e.message }); }
 });
 
-// 直接发一枚徽章（不藏在地点上）
+// 直接发一个成就（不藏在地点上）
 app.post("/api/travel-map/badges", (req, res) => {
   try {
     const badge = createBadge(req.body || {});
@@ -166,7 +166,7 @@ app.post("/api/travel-map/badges", (req, res) => {
   } catch (e) { res.status(400).json({ error: e.message }); }
 });
 
-// 找信人钉一枚「我来过」：手机当场定位的位置 + 一句话（可空）
+// 寻宝人钉一枚「我来过」：手机当场定位的位置 + 一句话（可空）
 app.post("/api/travel-map/marks", (req, res) => {
   try {
     const mark = createMark(req.body || {});

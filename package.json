@@ -2,7 +2,7 @@
   "name": "hidden-letters-map",
   "version": "0.1.0",
   "private": true,
-  "description": "藏信地图：把信、语音、徽章藏在真实的地方，对方走到附近才拿得到",
+  "description": "藏宝地图：把信、语音、成就藏在真实的地方，对方走到附近才拿得到",
   "type": "module",
   "engines": { "node": ">=20.6" },
   "scripts": {

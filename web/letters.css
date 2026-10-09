@@ -1,6 +1,6 @@
-/* 藏信地图的皮：米白纸 + 发丝线 + 纸纹 + 轻投影，宋体 / Cormorant / 文楷，封蜡 / 玫瑰 / 旧金勋章 / 指南针 / 小飞机。
+/* 藏宝地图的皮：米白纸 + 发丝线 + 纸纹 + 轻投影，宋体 / Cormorant / 文楷，封蜡 / 玫瑰 / 旧金勋章 / 指南针 / 小飞机。
    颜色分工：--lm-accent（玫瑰木）= 「我」和要按的（选中胶囊 / 主按钮 / 自己的位置 / 定位大圆钮 / 最近那封的钉 / 语音播放钮）；
-   腮红粉 = 藏起来的封蜡和雾圈 + 足迹图钉；旧金 = 拆开的 / 徽章 / 站点；梅子红只当线描的墨。粉底上的字用墨色（淡粉配白字对比度不够）。 */
+   腮红粉 = 藏起来的封蜡和雾圈 + 足迹图钉；旧金 = 拆开的 / 成就 / 站点；梅子红只当线描的墨。粉底上的字用墨色（淡粉配白字对比度不够）。 */
 @import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,500&display=swap");
 @import url("https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css"); /* 霞鹜文楷，信的正文 */
 
@@ -83,7 +83,7 @@
 @keyframes lm-breathe { from { transform: scale(0.4); opacity: 0.4; } to { transform: scale(1.25); opacity: 0; } }
 .lm-me-acc { stroke: var(--lm-accent); stroke-width: 1; fill: var(--lm-accent); fill-opacity: 0.08; }
 
-/* ── 顶部：眉标 + 宋体大标题 + 徽章圆钮 + 统计条 + 站点胶囊 ── */
+/* ── 顶部：眉标 + 宋体大标题 + 成就圆钮 + 统计条 + 站点胶囊 ── */
 .lm-head { position: absolute; top: var(--inset-top); left: 0; right: 0; z-index: 5; display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 18px 0 22px; animation: lm-rise 0.6s ease-out backwards; }
 .lm-head .en { font: 600 12px/1 var(--lm-en); font-variant-caps: all-small-caps; letter-spacing: 0.28em; color: #8d757b; }
 .lm-head .row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; margin-top: 5px; } /* 10/09 她：「上面有点太拥挤了」→ 数字并到标题同一行，少一层 */
@@ -272,7 +272,7 @@
 .lm-voice-cc { height: 28px; padding: 0 10px; border: 1px solid var(--lm-rule-2); border-radius: 6px; font: 400 12px/1 var(--lm-cn); letter-spacing: 0.1em; color: var(--lm-ink); }
 .lm-voice-cc.on { border-color: var(--lm-accent); color: var(--lm-accent-deep); }
 .lm-voice-text { grid-column: 1 / -1; margin: 0; font: 400 15px/1.7 var(--lm-hand); color: #75606a; padding: 2px 4px; }
-/* 解锁徽章：象牙底 + 细双金线的小证书 */
+/* 解锁成就：象牙底 + 细双金线的小证书 */
 .lm-unlock { margin-top: 14px; display: flex; gap: 16px; align-items: center; padding: 14px 18px 14px 16px; border-radius: 10px; background: var(--lm-grain), #f8f3ea; border: 1px solid var(--lm-gold); outline: 1px solid rgba(184, 153, 94, 0.45); outline-offset: -5px; }
 .lm-unlock small { display: block; font: 600 11px/1 var(--lm-en); letter-spacing: 0.24em; color: var(--lm-gold-deep); }
 .lm-unlock b { display: block; margin-top: 7px; font: 500 20px/1.3 var(--lm-cn); letter-spacing: 0.08em; }
@@ -314,7 +314,7 @@
 .lm-medal-sparks b:nth-child(even) { color: var(--lm-champagne); font-size: 8px; }
 @keyframes lm-spark { 0% { opacity: 0; transform: rotate(var(--a)) translateY(0) scale(0.3); } 30% { opacity: 1; } 100% { opacity: 0; transform: rotate(var(--a)) translateY(calc(var(--m) * -0.85)) scale(1); } }
 
-/* ── 徽章墙：米白纸半屏抽屉 ── */
+/* ── 成就墙：米白纸半屏抽屉 ── */
 .lm-wall-bg { position: absolute; inset: 0; z-index: 10; background: rgba(76, 54, 61, 0.28); animation: lm-fade-in 0.3s ease-out; }
 .lm-wall { position: absolute; left: 0; right: 0; bottom: 0; max-height: 84%; overflow-y: auto; background: var(--lm-grain), var(--lm-paper); border-top: 1px solid var(--lm-rule); border-radius: 18px 18px 0 0; padding: 10px 20px calc(var(--lm-safe-bot) + 22px);
   animation: lm-drawer-in 0.42s cubic-bezier(0.2, 0.9, 0.3, 1); }
