@@ -1,0 +1,9 @@
+{
+  "name": "藏信地图",
+  "short_name": "藏信",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f3ebe8",
+  "theme_color": "#f3ebe8",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

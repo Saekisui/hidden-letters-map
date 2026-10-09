@@ -1,0 +1,369 @@
+/* 藏信地图的皮：米白纸 + 发丝线 + 纸纹 + 轻投影，宋体 / Cormorant / 文楷，封蜡 / 玫瑰 / 旧金勋章 / 指南针 / 小飞机。
+   颜色分工：--lm-accent（玫瑰木）= 「我」和要按的（选中胶囊 / 主按钮 / 自己的位置 / 定位大圆钮 / 最近那封的钉 / 语音播放钮）；
+   腮红粉 = 藏起来的封蜡和雾圈 + 足迹图钉；旧金 = 拆开的 / 徽章 / 站点；梅子红只当线描的墨。粉底上的字用墨色（淡粉配白字对比度不够）。 */
+@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,500&display=swap");
+@import url("https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css"); /* 霞鹜文楷，信的正文 */
+
+.lm-page {
+  --lm-bg: #f3ebe8; --lm-bg-2: #efe7e2;
+  --lm-paper: #f4eee5; --lm-paper-2: #ece3d8; --lm-paper-hi: #fbf7f1;
+  --lm-rule: #dfd0ca; --lm-rule-2: #d2bfb9;
+  --lm-ink: #4c363d; --lm-muted: #9a8388; --lm-faint: #b8a5a9;
+  --lm-plum: #6e3148; --lm-plum-deep: #521a3a;
+  /* 强调色（一处改全页；LettersPage.jsx 顶上 ACCENT 三个常量要跟着改——钉子和封蜡的渐变在 SVG 里） */
+  --lm-accent: #a86b77; --lm-accent-deep: #8f5562; --lm-accent-soft: #ecd9dc; --lm-accent-glow: rgba(168, 107, 119, 0.32); --lm-on-accent: #fbf7f1;
+  --lm-blush: #dc9aa3; --lm-blush-deep: #c27c87; --lm-blush-tint: #f5e3e1;
+  --lm-gold: #b8995e; --lm-gold-deep: #7e6233; --lm-champagne: #ece0c2; --lm-gold-tint: #f2e9d4;
+  --lm-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45 0 0 0 0 .35 0 0 0 0 .32 0 0 0 .09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --lm-shadow: 0 8px 22px rgba(90, 50, 55, 0.1), 0 1px 2px rgba(90, 50, 55, 0.07);
+  --lm-shadow-lg: 0 18px 44px rgba(90, 50, 55, 0.17), 0 2px 6px rgba(90, 50, 55, 0.07);
+  --lm-safe-bot: env(safe-area-inset-bottom, 0px);
+  --inset-top: env(safe-area-inset-top, 0px); /* 主屏 app 的状态栏；preview.html 里写死 62px 模拟 iPhone */
+  --lm-cn: "Songti SC", "STSong", "Noto Serif SC", "Source Han Serif SC", serif;
+  --lm-en: "Cormorant Garamond", "Cormorant", Georgia, serif;
+  --lm-mix: "Cormorant Garamond", "Songti SC", "STSong", "Noto Serif SC", serif; /* 数字和拉丁字走 Cormorant，汉字落到宋体 */
+  --lm-hand: "LXGW WenKai", "Kaiti SC", "STKaiti", serif;
+  --lm-script: "Great Vibes", "Snell Roundhand", cursive;
+  position: fixed; inset: 0; z-index: 50; overflow: hidden;
+  background: var(--lm-bg); color: var(--lm-ink);
+  font-family: var(--lm-cn); -webkit-font-smoothing: antialiased;
+}
+/* 按钮重置放最低优先级（:where），不然 .lm-chip / .lm-go / .lm-fab 的底色全被它吃掉 */
+:where(.lm-page) button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; text-align: inherit; padding: 0; -webkit-tap-highlight-color: transparent; }
+.lm-page .lm-ic { width: 1em; height: 1em; flex: none; }
+.lm-paper { background: var(--lm-grain), var(--lm-paper); }
+
+/* ── 地图：烟粉但很浅，整张图上再压一层纸纹 ── */
+.lm-map { position: absolute; inset: 0; z-index: 0; background: var(--lm-bg); }
+.lm-map.leaflet-container { background: var(--lm-bg); font-family: var(--lm-cn); }
+.lm-map .leaflet-tile-pane { filter: grayscale(0.62) sepia(0.3) hue-rotate(-22deg) saturate(0.8) contrast(0.66) brightness(1.16); opacity: 0.5; }
+.lm-map .leaflet-top.leaflet-right { top: calc(var(--inset-top) + 112px); }
+.lm-map .leaflet-control-attribution { background: transparent !important; font: 500 10px/1.2 var(--lm-en) !important; color: var(--lm-muted) !important; }
+.lm-map .leaflet-control-attribution a { color: var(--lm-muted) !important; text-decoration: none; }
+.lm-map .leaflet-marker-icon { background: none; border: 0; }
+.lm-grain-veil { position: absolute; inset: 0; z-index: 1; pointer-events: none; background: var(--lm-grain); }
+/* 上下两层渐隐压得很薄 */
+.lm-veil-top { position: absolute; left: 0; right: 0; top: 0; height: calc(var(--inset-top) + 124px); z-index: 2; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(243, 235, 232, 0.94) 0, rgba(243, 235, 232, 0.72) 55%, rgba(243, 235, 232, 0) 100%); }
+.lm-veil-bot { position: absolute; left: 0; right: 0; bottom: 0; height: 150px; z-index: 2; pointer-events: none;
+  background: linear-gradient(to top, rgba(243, 235, 232, 0.8) 0, rgba(243, 235, 232, 0) 100%); }
+
+/* 雾圈 / 路线 / 足迹 */
+.lm-fog { fill: url(#lmFogGrad); fill-opacity: 1; stroke: var(--lm-blush-deep); stroke-width: 1.4; stroke-dasharray: 1.5 6; stroke-linecap: round; stroke-opacity: 0.85; animation: lm-fog 5s ease-in-out infinite; }
+.lm-fog.on { stroke-width: 2; stroke-dasharray: 6 5; stroke-opacity: 1; }
+@keyframes lm-fog { 50% { opacity: 0.7; } }
+.lm-route { stroke: #a27b85; stroke-width: 2.2; stroke-linecap: round; stroke-dasharray: 0.1 7; fill: none; opacity: 0.75; }
+.lm-route.flight { stroke-width: 1.3; stroke-dasharray: 5 6; opacity: 0.5; }
+.lm-track-case { stroke: var(--lm-paper-hi); stroke-width: 6.5; stroke-linecap: round; stroke-linejoin: round; fill: none; opacity: 0.9; }
+.lm-track { stroke: var(--lm-blush-deep); stroke-width: 2.3; stroke-linecap: round; stroke-linejoin: round; fill: none; opacity: 0.95; }
+
+/* 气泡图钉：暖白纸泪滴 + 发丝线 + 软投影，里面一枚现存实物 */
+.lm-bp { position: relative; display: block; width: 48px; height: 60px; transform-origin: 50% 95%; transition: transform 0.28s cubic-bezier(0.3, 1.4, 0.5, 1); }
+.lm-bp.sm { width: 40px; height: 50px; }
+.lm-bp.lg { width: 56px; height: 70px; }
+.lm-bp svg { position: relative; width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 6px 9px rgba(90, 50, 55, 0.16)) drop-shadow(0 1px 1.5px rgba(90, 50, 55, 0.14)); }
+.lm-bp.lg svg { filter: drop-shadow(0 8px 14px var(--lm-accent-glow)) drop-shadow(0 1px 2px rgba(90, 50, 55, 0.15)); }
+.lm-bp.on { transform: scale(1.16) translateY(-2px); }
+.lm-bp.drop { animation: lm-drop 0.6s cubic-bezier(0.3, 1.45, 0.5, 1) var(--d, 0s) backwards; }
+@keyframes lm-drop { from { transform: translateY(-26px) scale(0.55); opacity: 0; } }
+.lm-bp-pulse { position: absolute; left: 50%; top: 38%; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; border: 1.5px solid var(--lm-gold); animation: lm-ring 2.2s ease-out infinite; }
+.lm-bp.pending svg { animation: lm-bob 1.4s ease-in-out infinite; }
+@keyframes lm-bob { 50% { transform: translateY(-5px); } }
+@keyframes lm-ring { from { transform: scale(0.6); opacity: 0.9; } to { transform: scale(1.7); opacity: 0; } }
+.lm-map.far .lm-bp { transform: scale(0.64); }
+.lm-map.far .lm-bp.on { transform: scale(0.8); }
+/* 站点：旧地图上的双圈金边编号 */
+.lm-stop { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--lm-paper-hi); font: 600 15px/1 var(--lm-en); font-variant-numeric: lining-nums; color: var(--lm-gold-deep);
+  box-shadow: 0 0 0 1.5px var(--lm-gold), 0 0 0 3.5px var(--lm-paper-hi), 0 0 0 4.3px rgba(184, 153, 94, 0.55), 0 4px 9px rgba(90, 50, 55, 0.2); transition: transform 0.25s; }
+.lm-stop.on { transform: scale(1.25); }
+.lm-plane { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--lm-paper-hi); border: 1px solid var(--lm-rule); box-shadow: 0 3px 8px rgba(90, 50, 55, 0.14); }
+.lm-plane svg { width: 16px; height: 16px; fill: var(--lm-paper); stroke: var(--lm-plum); stroke-width: 1.3; stroke-linejoin: round; }
+.lm-me { position: relative; display: block; width: 20px; height: 20px; border-radius: 50%; background: var(--lm-accent); border: 3.5px solid var(--lm-paper-hi); box-shadow: 0 0 0 1px rgba(194, 124, 135, 0.45), 0 4px 12px var(--lm-accent-glow); }
+.lm-me::before { content: ""; position: absolute; inset: -14px; border-radius: 50%; background: var(--lm-accent); opacity: 0.22; animation: lm-breathe 2.6s ease-out infinite; z-index: -1; }
+@keyframes lm-breathe { from { transform: scale(0.4); opacity: 0.4; } to { transform: scale(1.25); opacity: 0; } }
+.lm-me-acc { stroke: var(--lm-accent); stroke-width: 1; fill: var(--lm-accent); fill-opacity: 0.08; }
+
+/* ── 顶部：眉标 + 宋体大标题 + 徽章圆钮 + 统计条 + 站点胶囊 ── */
+.lm-head { position: absolute; top: var(--inset-top); left: 0; right: 0; z-index: 5; display: flex; justify-content: space-between; align-items: flex-start; padding: 8px 18px 0 22px; animation: lm-rise 0.6s ease-out backwards; }
+.lm-head .en { font: 600 12px/1 var(--lm-en); font-variant-caps: all-small-caps; letter-spacing: 0.28em; color: #8d757b; }
+.lm-head .row { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 14px; margin-top: 5px; } /* 10/09 她：「上面有点太拥挤了」→ 数字并到标题同一行，少一层 */
+.lm-head h1 { margin: 0; font: 400 24px/1.15 var(--lm-cn); letter-spacing: 0.2em; color: var(--lm-ink); }
+.lm-head .sub { margin: 0; display: flex; align-items: center; gap: 5px; font: 400 11.5px/1 var(--lm-cn); letter-spacing: 0.08em; color: var(--lm-muted); }
+.lm-head .sub b { font: 600 15px/1 var(--lm-en); font-variant-numeric: lining-nums; letter-spacing: 0; color: var(--lm-ink); margin: -2px 0 0; }
+.lm-head .sub i { width: 1px; height: 11px; margin: 0 5px; background: var(--lm-rule-2); }
+.lm-wall-btn { position: relative; width: 44px; height: 44px; border-radius: 50%; background: var(--lm-grain), var(--lm-paper); border: 1px solid var(--lm-rule); box-shadow: var(--lm-shadow); display: grid; place-items: center; margin-top: 2px; }
+.lm-wall-btn b { position: absolute; right: -3px; top: -3px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 10px; background: var(--lm-ink); color: var(--lm-paper); font: 600 13px/17px var(--lm-en); font-variant-numeric: lining-nums; text-align: center; border: 1.5px solid var(--lm-paper); }
+/* 现存那枚旧金小币（酒红珐琅心 + 滚金边） */
+.lm-mini-coin { width: 27px; height: 27px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; color: var(--lm-champagne);
+  background: radial-gradient(circle, #521a3a 0 48%, transparent 50%), linear-gradient(135deg, #f3e5bf, #cdb074 30%, #957340 52%, #dcc48c 74%, #6f532a);
+  box-shadow: 0 0 0 1px #6f532a, 0 1px 3px rgba(58, 38, 12, 0.3); }
+.lm-mini-coin.lg { width: 38px; height: 38px; font-size: 15px; }
+.lm-mini-coin i { font-style: normal; filter: grayscale(1) sepia(0.85) saturate(1.5) brightness(1.15); }
+.lm-chips { position: absolute; z-index: 5; top: calc(var(--inset-top) + 66px); left: 0; right: 0; display: flex; gap: 8px; overflow-x: auto; padding: 2px 20px 8px; scrollbar-width: none; animation: lm-rise 0.6s ease-out 0.12s backwards; }
+.lm-chips::-webkit-scrollbar, .lm-cards::-webkit-scrollbar { display: none; }
+.lm-chip { flex: none; height: 30px; padding: 0 12px; border-radius: 999px; background: rgba(244, 238, 229, 0.9); border: 1px solid var(--lm-rule); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  display: flex; align-items: center; gap: 6px; font: 400 12.5px/1 var(--lm-cn); letter-spacing: 0.08em; color: var(--lm-ink); transition: background 0.2s, color 0.2s, box-shadow 0.2s, border-color 0.2s; }
+.lm-chip small { font: italic 500 13px/1 var(--lm-en); letter-spacing: 0.02em; color: var(--lm-muted); }
+.lm-chip.on { background: var(--lm-grain), var(--lm-accent); border-color: var(--lm-accent); color: var(--lm-on-accent); box-shadow: 0 6px 14px var(--lm-accent-glow); }
+.lm-chip.on small { color: var(--lm-on-accent); opacity: 0.85; }
+@keyframes lm-rise { from { opacity: 0; transform: translateY(10px); } }
+
+/* ── 附近藏着的：横滑卡（米白纸） ── */
+.lm-near { position: absolute; left: 0; right: 0; bottom: calc(var(--lm-safe-bot) + 90px); z-index: 5; transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1), opacity 0.25s; }
+.lm-near.hide { transform: translateY(40px); opacity: 0; pointer-events: none; }
+.lm-near-head { display: flex; align-items: center; justify-content: space-between; padding: 0 20px 8px; }
+/* 标题本身是开关：点一下收成一枚小纸签，地图全露出来 */
+.lm-near-head h3 { margin: 0; }
+.lm-near-head h3 button { display: flex; align-items: center; gap: 4px; height: 30px; padding: 0 12px 0 14px; border-radius: 999px; background: rgba(244, 238, 229, 0.92); border: 1px solid var(--lm-rule); box-shadow: var(--lm-shadow); font: 500 13px/1 var(--lm-cn); letter-spacing: 0.14em; color: var(--lm-ink); }
+.lm-near-head h3 .lm-ic { width: 15px; height: 15px; color: var(--lm-muted); transition: transform 0.25s; }
+.lm-near.closed .lm-near-head { padding-bottom: 0; }
+.lm-near.closed .lm-near-head h3 .lm-ic { transform: rotate(180deg); }
+.lm-near.closed .lm-cards, .lm-near.closed .lm-dots { display: none; }
+.lm-dots { display: flex; gap: 5px; }
+.lm-dots i { width: 6px; height: 6px; border-radius: 3px; background: var(--lm-rule-2); transition: width 0.25s, background 0.25s; }
+.lm-dots i.on { width: 18px; background: var(--lm-ink); }
+.lm-cards { display: flex; gap: 12px; overflow-x: auto; padding: 6px 20px 14px; scroll-snap-type: x mandatory; scroll-padding-left: 20px; scrollbar-width: none; }
+.lm-card { flex: none; width: 164px; scroll-snap-align: start; background: var(--lm-grain), var(--lm-paper); border: 1px solid var(--lm-rule); border-radius: 14px; padding: 8px 8px 11px; box-shadow: var(--lm-shadow); transition: transform 0.15s; animation: lm-rise 0.55s ease-out backwards; }
+.lm-card:active { transform: scale(0.97); }
+.lm-ill { position: relative; height: 92px; border-radius: 10px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(210, 191, 185, 0.7); }
+.lm-ill svg { display: block; width: 100%; height: 100%; }
+.lm-ill::after { content: ""; position: absolute; inset: 0; background: var(--lm-grain); pointer-events: none; border-radius: inherit; }
+.lm-kick { display: inline-block; font: 600 10.5px/1 var(--lm-en); letter-spacing: 0.24em; }
+.lm-card .lm-kick { position: absolute; z-index: 1; left: 7px; top: 7px; padding: 4px 6px 3px 7px; border-radius: 5px; background: rgba(251, 247, 241, 0.94); border: 1px solid var(--lm-rule); }
+.lm-card h4 { margin: 10px 3px 0; font: 400 15px/1.35 var(--lm-hand); color: var(--lm-ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lm-card h4.place { font: 500 14.5px/1.4 var(--lm-cn); letter-spacing: 0.06em; }
+.lm-card .tg { margin: 3px 3px 0; font: 400 11px/1.4 var(--lm-cn); letter-spacing: 0.1em; color: var(--lm-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lm-card .ad { margin: 2px 3px 0; display: flex; align-items: center; gap: 4px; font: 500 12.5px/1.35 var(--lm-mix); color: var(--lm-muted); white-space: nowrap; overflow: hidden; }
+.lm-card .ad .lm-ic { width: 11px; height: 11px; color: var(--lm-blush-deep); }
+.lm-card .ft { margin: 8px 3px 0; padding-top: 8px; border-top: 1px solid var(--lm-rule); display: flex; align-items: center; gap: 5px; font: 500 12.5px/1.2 var(--lm-mix); color: var(--lm-ink); white-space: nowrap; overflow: hidden; }
+.lm-card .ft .lm-ic { width: 12px; height: 12px; color: var(--lm-muted); }
+.lm-medot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--lm-accent); box-shadow: 0 0 0 3px var(--lm-accent-soft); }
+.lm-pdots { display: inline-flex; gap: 3px; }
+.lm-pdots i { width: 7px; height: 7px; border-radius: 50%; border: 1px solid var(--lm-blush-deep); }
+.lm-pdots i.on { background: var(--lm-blush-deep); }
+.k-sealed { color: var(--lm-blush-deep); }
+.k-opened, .k-found { color: var(--lm-gold-deep); }
+.k-mark { color: var(--lm-ink); }
+.k-stop { color: var(--lm-muted); }
+.k-here { color: var(--lm-accent-deep); }
+
+/* ── 底栏：悬浮的小纸胶囊——中间旧玫瑰大圆钮 = 定位我，两侧返回 / 我来过，地图从两边露出来 ── */
+.lm-bar { position: absolute; left: 50%; bottom: calc(var(--lm-safe-bot) + 14px); width: 236px; height: 54px; margin-left: -118px; z-index: 7; border-radius: 27px;
+  background: var(--lm-grain), var(--lm-paper); border: 1px solid var(--lm-rule); box-shadow: var(--lm-shadow-lg); }
+.lm-bar-btn { position: absolute; top: 7px; width: 72px; display: flex; flex-direction: column; align-items: center; gap: 4px; font: 400 10.5px/1 var(--lm-cn); letter-spacing: 0.14em; color: var(--lm-muted); }
+.lm-bar-btn .lm-ic { width: 20px; height: 20px; color: #ab8f95; }
+.lm-bar-btn.l { left: 8px; }
+.lm-bar-btn.r { right: 8px; }
+.lm-bar-btn:disabled { opacity: 0.45; }
+.lm-fab { position: absolute; left: 50%; top: -16px; width: 56px; height: 56px; margin-left: -28px; border-radius: 50%; background: var(--lm-grain), var(--lm-accent); color: var(--lm-on-accent); display: grid; place-items: center;
+  box-shadow: 0 0 0 5px var(--lm-paper), 0 12px 22px var(--lm-accent-glow); transition: transform 0.15s; }
+.lm-fab:active { transform: scale(0.94); }
+.lm-fab .lm-ic { width: 22px; height: 22px; transform: translate(-1px, 1px); }
+.lm-fab.on::after { content: ""; position: absolute; inset: -5px; border-radius: 50%; border: 1.5px solid var(--lm-accent); animation: lm-ring 2s ease-out infinite; }
+
+/* ── 大卡（点开一张）：米白纸、眉标压一道发丝线 ── */
+.lm-sheet { position: absolute; left: 12px; right: 12px; bottom: calc(var(--lm-safe-bot) + 92px); z-index: 6; background: var(--lm-grain), var(--lm-paper); border: 1px solid var(--lm-rule); border-radius: 16px; padding: 16px 18px 18px; box-shadow: var(--lm-shadow-lg);
+  animation: lm-sheet-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.1); }
+@keyframes lm-sheet-in { from { opacity: 0; transform: translateY(24px) scale(0.98); } }
+.lm-krow { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; padding: 3px 40px 11px 0; border-bottom: 1px solid var(--lm-rule); font: 500 13px/1.4 var(--lm-mix); letter-spacing: 0.05em; color: var(--lm-muted); }
+.lm-krow .lm-kick { font-size: 11.5px; letter-spacing: 0.28em; }
+.lm-x { position: absolute; right: 12px; top: 10px; width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; color: var(--lm-muted); }
+.lm-x:active { background: var(--lm-paper-2); }
+.lm-sh-main { display: flex; gap: 14px; margin-top: 14px; align-items: flex-start; }
+.lm-sh-ill { position: relative; flex: none; width: 76px; height: 76px; border-radius: 12px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(210, 191, 185, 0.7); }
+.lm-sh-ill svg { display: block; width: 100%; height: 100%; }
+.lm-sh-ill::after { content: ""; position: absolute; inset: 0; background: var(--lm-grain); pointer-events: none; border-radius: inherit; }
+.lm-sh-title { margin: 0; font: 400 19.5px/1.55 var(--lm-hand); color: var(--lm-ink); }
+.lm-sh-title.place { font: 500 21px/1.4 var(--lm-cn); letter-spacing: 0.08em; }
+.lm-sh-sub { margin: 3px 0 0; font: 400 15px/1.6 var(--lm-hand); color: var(--lm-muted); }
+.lm-sh-sub.mix { font: 500 16px/1.6 var(--lm-mix); letter-spacing: 0.06em; }
+.lm-near-line { display: flex; align-items: center; gap: 7px; margin: 7px 0 0; font: 500 13px/1.3 var(--lm-mix); letter-spacing: 0.06em; color: var(--lm-ink); }
+.lm-near-line .lm-ic { width: 14px; height: 14px; color: var(--lm-muted); }
+.lm-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+.lm-tag { font: 400 12px/1 var(--lm-cn); letter-spacing: 0.12em; padding: 6px 10px 6px 11px; border-radius: 6px; border: 1px solid; background: rgba(251, 247, 241, 0.55); }
+.t-letter { color: var(--lm-blush-deep); border-color: rgba(194, 124, 135, 0.5); }
+.t-voice { color: #7d5f68; border-color: rgba(110, 49, 72, 0.26); }
+.t-badge { color: var(--lm-gold-deep); border-color: rgba(184, 153, 94, 0.6); }
+.lm-progress { display: flex; align-items: center; gap: 9px; margin-top: 12px; font: 500 13px/1 var(--lm-mix); letter-spacing: 0.04em; color: var(--lm-muted); }
+.lm-progress .lm-pdots i { width: 9px; height: 9px; }
+.lm-go { margin-top: 16px; width: 100%; height: 52px; border-radius: 12px; background: var(--lm-grain), var(--lm-accent); color: var(--lm-on-accent); display: flex; align-items: center; justify-content: center; gap: 9px;
+  font: 400 15.5px/1 var(--lm-cn); letter-spacing: 0.2em; box-shadow: 0 8px 18px var(--lm-accent-glow), inset 0 1px 0 rgba(255, 255, 255, 0.3); transition: transform 0.15s, opacity 0.2s; }
+.lm-go .lm-ic { width: 18px; height: 18px; }
+.lm-go:active { transform: scale(0.98); }
+.lm-go:disabled { opacity: 0.65; }
+.lm-go.ghost { background: transparent; color: var(--lm-ink); border: 1px solid var(--lm-rule-2); box-shadow: none; }
+.lm-note { margin: 10px 0 0; font: 500 13.5px/1.5 var(--lm-mix); letter-spacing: 0.04em; color: var(--lm-accent-deep); text-align: center; }
+
+/* ── HERE 留言抽屉 ── */
+.lm-drawer { position: absolute; left: 0; right: 0; bottom: 0; z-index: 8; background: var(--lm-grain), var(--lm-paper); border-top: 1px solid var(--lm-rule); border-radius: 18px 18px 0 0; padding: 10px 20px calc(var(--lm-safe-bot) + 16px);
+  box-shadow: 0 -14px 40px rgba(90, 50, 55, 0.14); animation: lm-drawer-in 0.4s cubic-bezier(0.2, 0.9, 0.3, 1); }
+@keyframes lm-drawer-in { from { transform: translateY(105%); } }
+.lm-grab { width: 40px; height: 4px; border-radius: 2px; background: var(--lm-rule-2); margin: 0 auto 16px; }
+.lm-drawer .lm-x { top: 22px; }
+.lm-mark-input { display: block; width: 100%; box-sizing: border-box; margin-top: 14px; min-height: 100px; border-radius: 10px; border: 1px solid var(--lm-rule); background: #fbf8f3; padding: 12px 14px;
+  font: 400 17px/1.6 var(--lm-hand); color: var(--lm-ink); resize: none; outline: none; transition: border-color 0.2s, background 0.2s; }
+.lm-mark-input::placeholder { color: var(--lm-faint); }
+.lm-mark-input:focus { border-color: var(--lm-accent); background: #fffdf9; }
+
+/* ── 详情页（拆开过的那封）── */
+.lm-detail { position: absolute; inset: 0; z-index: 9; background: var(--lm-grain), var(--lm-bg-2); overflow-y: auto; overflow-x: hidden; scrollbar-width: none; animation: lm-detail-in 0.48s cubic-bezier(0.2, 0.9, 0.3, 1); }
+.lm-detail::-webkit-scrollbar { display: none; }
+@keyframes lm-detail-in { from { transform: translateY(102%); } }
+/* 快照自己隔一层（isolation）并压在正文下面：iOS Safari 会把 Leaflet 的 3D 层画到后面正文上；正文不再往上叠进快照，改成快照矮 34px */
+.lm-dt-hero { position: relative; z-index: 1; isolation: isolate; height: calc(var(--inset-top) + 344px); overflow: hidden; }
+.lm-hero-map { position: absolute; inset: 0; z-index: 0; background: var(--lm-bg); }
+.lm-hero-map .leaflet-tile-pane { filter: grayscale(0.62) sepia(0.3) hue-rotate(-22deg) saturate(0.8) contrast(0.66) brightness(1.16); opacity: 0.5; }
+.lm-dt-veil { position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: radial-gradient(ellipse 66% 40% at 50% 58%, rgba(251, 247, 241, 0.9), rgba(251, 247, 241, 0) 72%),
+              linear-gradient(to bottom, rgba(239, 231, 226, 0.55) 0, rgba(239, 231, 226, 0) 24%, rgba(239, 231, 226, 0) 62%, var(--lm-bg-2) 95%); }
+.lm-dt-back { position: absolute; left: 18px; top: calc(var(--inset-top) + 6px); z-index: 3; width: 46px; height: 46px; border-radius: 50%; background: var(--lm-grain), var(--lm-paper); border: 1px solid var(--lm-rule); box-shadow: var(--lm-shadow); display: grid; place-items: center; }
+/* 现存那只四片纸叠的信封，拆开的样子：封口翻上去、信纸抽出来、腮红粉封蜡还压在底片上 */
+.lm-he { position: absolute; left: 50%; top: calc(var(--inset-top) + 142px); width: 260px; height: 174px; margin-left: -130px; z-index: 2; }
+.lm-he > span { position: absolute; display: block; }
+.lm-he-shadow { left: 2%; right: 2%; bottom: -18px; height: 24px; border-radius: 50%; background: radial-gradient(closest-side, rgba(90, 50, 55, 0.2), transparent); }
+.lm-he-flap { left: 0; right: 0; bottom: 100%; height: 60%; margin-bottom: -2px; filter: drop-shadow(0 -1px 1.5px rgba(90, 60, 50, 0.14)); }
+.lm-he-flap i { position: absolute; inset: 0; clip-path: polygon(0 100%, 50% 0, 100% 100%); background: var(--lm-grain), linear-gradient(0deg, #e5d6c6, #eee3d6 70%, #f3eadf); }
+.lm-he-inside { inset: 0; border-radius: 4px; background: linear-gradient(180deg, #dccbba, #e8dbcc); box-shadow: 0 1px 1px rgba(90, 50, 55, 0.06), 0 10px 18px rgba(90, 50, 55, 0.1), 0 30px 54px rgba(90, 50, 55, 0.14); }
+.lm-he-paper { left: 8%; right: 8%; top: -46%; bottom: 12%; z-index: 1; border-radius: 2px;
+  background: linear-gradient(#fcf9f4 0 42px, transparent 42px), repeating-linear-gradient(transparent 0 15px, rgba(110, 49, 72, 0.08) 15px 16px), #fcf9f4;
+  box-shadow: 0 0 0 0.5px rgba(90, 60, 50, 0.14), 0 -2px 10px rgba(90, 50, 55, 0.06); animation: lm-he-paper 0.95s cubic-bezier(0.2, 0.9, 0.3, 1.12) 0.3s backwards; }
+@keyframes lm-he-paper { from { transform: translateY(52%); } }
+.lm-he-paper em { position: absolute; left: 0; right: 0; top: 12px; text-align: center; font: 400 25px/1 var(--lm-script); font-style: normal; color: var(--lm-blush-deep); }
+.lm-he-panel { inset: 0; z-index: 2; }
+.lm-he-panel i { position: absolute; inset: 0; }
+.lm-he-panel.side-l { filter: drop-shadow(1px 0 1.5px rgba(90, 60, 50, 0.1)); }
+.lm-he-panel.side-l i { border-radius: 4px 0 0 4px; clip-path: polygon(0 0, 52% 54%, 0 100%); background: var(--lm-grain), linear-gradient(100deg, #f8f2e8, #f0e7db); }
+.lm-he-panel.side-r { filter: drop-shadow(-1px 0 1.5px rgba(90, 60, 50, 0.1)); }
+.lm-he-panel.side-r i { border-radius: 0 4px 4px 0; clip-path: polygon(100% 0, 48% 54%, 100% 100%); background: var(--lm-grain), linear-gradient(260deg, #f2e9de, #eadfd1); }
+.lm-he-panel.bottom { z-index: 3; filter: drop-shadow(0 -1.5px 2px rgba(90, 60, 50, 0.13)); }
+.lm-he-panel.bottom i { border-radius: 0 0 4px 4px; clip-path: polygon(0 100%, 50% 46%, 100% 100%); background: var(--lm-grain), linear-gradient(0deg, #efe6da, #f7f0e6); }
+.lm-he-emboss { left: 0; right: 0; bottom: 8%; z-index: 4; display: grid; justify-items: center; gap: 5px; font: 600 10px/1 var(--lm-en); letter-spacing: 0.22em; color: #ede3d6; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.95), 0 -1px 0 rgba(120, 85, 70, 0.34); }
+.lm-he-emboss b { font: 600 12px/1 var(--lm-cn); letter-spacing: 0.45em; }
+.lm-he-seal { left: 50%; top: 50%; width: 70px; height: 70px; margin: -40px 0 0 -35px; z-index: 5; filter: drop-shadow(0 1.5px 1.5px rgba(120, 58, 68, 0.3)) drop-shadow(0 6px 8px rgba(120, 58, 68, 0.14)); }
+.lm-he-seal svg { width: 100%; height: 100%; overflow: visible; }
+.lm-he-medal { right: -12px; top: -50px; z-index: 6; transform: rotate(9deg); }
+.lm-dt-body { position: relative; z-index: 2; margin-top: 0; padding: 6px 22px calc(var(--lm-safe-bot) + 40px); }
+.lm-eyebrow { font: 500 12px/1 var(--lm-mix); letter-spacing: 0.24em; color: var(--lm-muted); }
+.lm-eyebrow.en { font: 600 11.5px/1 var(--lm-mix); letter-spacing: 0.28em; }
+.lm-dt-body .lm-tags { margin-top: 10px; }
+.lm-dt-title { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 16px; }
+.lm-dt-title h2 { margin: 0; font: 500 29px/1.25 var(--lm-cn); letter-spacing: 0.1em; }
+.lm-dt-medal { flex: none; width: 54px; height: 54px; border-radius: 50%; background: var(--lm-grain), var(--lm-paper); border: 1px solid var(--lm-rule); box-shadow: var(--lm-shadow); display: grid; place-items: center; }
+.lm-dt-meta { display: flex; align-items: center; gap: 8px; margin: 9px 0 0; font: 500 15px/1.4 var(--lm-mix); letter-spacing: 0.04em; color: var(--lm-muted); }
+.lm-dt-meta .lm-ic { width: 15px; height: 15px; color: var(--lm-blush-deep); }
+.lm-dt-meta b { color: var(--lm-ink); font-weight: 600; letter-spacing: 0.06em; }
+.lm-dt-quote { margin: 16px 0 0; padding: 12px 16px 12px 14px; border-radius: 12px; background: var(--lm-grain), var(--lm-paper); border: 1px solid var(--lm-rule); font: 400 16px/1.6 var(--lm-hand); color: #75606a; display: flex; gap: 8px; }
+.lm-dt-quote::before { content: "\201C"; font: 600 32px/0.9 var(--lm-en); color: var(--lm-blush); }
+.lm-dt-sec { margin-top: 28px; }
+/* 信纸：米白横格 + 左边一条页边线，只有正文和落款 */
+.lm-letter { position: relative; margin-top: 12px; padding: 20px 20px 16px 34px; border-radius: 12px; border: 1px solid var(--lm-rule); box-shadow: var(--lm-shadow);
+  background: linear-gradient(90deg, transparent 21px, rgba(194, 124, 135, 0.45) 21px 22px, transparent 22px), var(--lm-grain), var(--lm-paper); }
+.lm-letter-body { min-height: 108px; font: 400 19px/36px var(--lm-hand); color: var(--lm-ink); white-space: pre-wrap; background-image: repeating-linear-gradient(transparent 0 35px, var(--lm-rule) 35px 36px); }
+.lm-letter-sign { margin-top: 8px; text-align: right; font: 400 18px/1.5 var(--lm-hand); color: var(--lm-blush-deep); }
+/* 语音讲解：米白纸上一条细细的播放条 */
+.lm-voice { margin-top: 14px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; background: var(--lm-grain), var(--lm-paper-2); border: 1px solid var(--lm-rule); border-radius: 12px; padding: 10px 12px; }
+.lm-voice-btn { width: 40px; height: 40px; border-radius: 50%; background: var(--lm-grain), var(--lm-accent); color: var(--lm-on-accent); display: grid; place-items: center; box-shadow: 0 4px 10px var(--lm-accent-glow); }
+.lm-voice-main { min-width: 0; }
+.lm-voice-label { display: flex; align-items: baseline; gap: 6px; font: 400 13px/1.2 var(--lm-cn); letter-spacing: 0.08em; }
+.lm-voice-label em { font: italic 400 14px/1 var(--lm-en); letter-spacing: 0.02em; color: var(--lm-muted); }
+.lm-voice-label span { margin-left: auto; font: 500 15px/1 var(--lm-en); font-variant-numeric: lining-nums tabular-nums; color: var(--lm-muted); }
+.lm-voice-bar { margin-top: 10px; height: 2px; background: var(--lm-rule-2); overflow: hidden; }
+.lm-voice-bar i { display: block; height: 100%; width: 0; background: var(--lm-accent); transition: width 0.25s linear; }
+.lm-voice-cc { height: 28px; padding: 0 10px; border: 1px solid var(--lm-rule-2); border-radius: 6px; font: 400 12px/1 var(--lm-cn); letter-spacing: 0.1em; color: var(--lm-ink); }
+.lm-voice-cc.on { border-color: var(--lm-accent); color: var(--lm-accent-deep); }
+.lm-voice-text { grid-column: 1 / -1; margin: 0; font: 400 15px/1.7 var(--lm-hand); color: #75606a; padding: 2px 4px; }
+/* 解锁徽章：象牙底 + 细双金线的小证书 */
+.lm-unlock { margin-top: 14px; display: flex; gap: 16px; align-items: center; padding: 14px 18px 14px 16px; border-radius: 10px; background: var(--lm-grain), #f8f3ea; border: 1px solid var(--lm-gold); outline: 1px solid rgba(184, 153, 94, 0.45); outline-offset: -5px; }
+.lm-unlock small { display: block; font: 600 11px/1 var(--lm-en); letter-spacing: 0.24em; color: var(--lm-gold-deep); }
+.lm-unlock b { display: block; margin-top: 7px; font: 500 20px/1.3 var(--lm-cn); letter-spacing: 0.08em; }
+.lm-unlock p { margin: 6px 0 0; font: 400 14px/1.6 var(--lm-hand); color: var(--lm-muted); }
+
+/* ── 复古旧金勋章 ── */
+.lm-medal { --m: 62px; position: relative; isolation: isolate; flex: none; display: inline-block; width: var(--m); height: calc(var(--m) * 1.46); perspective: 420px; }
+.lm-medal-ribbon { position: absolute; left: 50%; top: 0; width: calc(var(--m) * 0.44); height: calc(var(--m) * 0.44); transform: translateX(-50%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 35%, rgba(0, 0, 0, 0.22)), repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.07) 0 1px, transparent 1px 2px),
+    linear-gradient(90deg, #4a1222 0 14%, #eadfc4 14% 21%, #b0904f 21% 25%, #6b1d33 25% 75%, #b0904f 75% 79%, #eadfc4 79% 86%, #4a1222 86%);
+  clip-path: polygon(0 0, 100% 0, 100% 72%, 50% 100%, 0 72%); }
+.lm-medal-ring { position: absolute; left: 50%; top: calc(var(--m) * 0.37); width: 9px; height: 11px; margin-left: -4.5px; border-radius: 50%; border: 2px solid #a8884c; box-shadow: inset 0 0 0 0.5px #f1e3bc, 0 1px 1px rgba(0, 0, 0, 0.3); }
+.lm-medal-coin { position: absolute; left: 0; top: calc(var(--m) * 0.46); width: var(--m); height: var(--m); transform-style: preserve-3d; animation: lm-wobble 5.2s ease-in-out infinite; filter: drop-shadow(0 4px 5px rgba(58, 38, 12, 0.35)); }
+.lm-medal-coin > span, .lm-medal-svg { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; }
+@keyframes lm-wobble { 0%, 100% { transform: rotateY(-18deg) rotateX(4deg); } 50% { transform: rotateY(18deg) rotateX(-2deg); } }
+.lm-medal-coin.spin { animation: lm-spin 1.2s cubic-bezier(0.3, 0.9, 0.3, 1), lm-wobble 5.2s ease-in-out 1.2s infinite; }
+@keyframes lm-spin { from { transform: rotateY(-360deg); } to { transform: rotateY(0); } }
+.lm-medal-edge { background: #6f532a; transform: translateZ(-1.5px); }
+.lm-medal-edge.e2 { background: #5c4421; transform: translateZ(-3px); }
+.lm-medal-edge.e3 { background: #4a361a; transform: translateZ(-4.5px); }
+.lm-medal-motto { font: 700 6px/1 "IBM Plex Serif", Georgia, "Times New Roman", serif; letter-spacing: 0.4px; }
+.lm-medal-icon { display: grid; place-items: center; transform: translateZ(1px); }
+.lm-medal-icon i { font-style: normal; font-size: calc(var(--m) * 0.27); line-height: 1;
+  filter: grayscale(1) sepia(0.85) saturate(1.5) brightness(1.08) contrast(1.05) drop-shadow(0 -0.6px 0 rgba(30, 6, 12, 0.7)) drop-shadow(0 0.8px 0 rgba(255, 238, 200, 0.35)); }
+.lm-medal-shine { transform: translateZ(2px); pointer-events: none; mix-blend-mode: soft-light;
+  background: linear-gradient(115deg, transparent 34%, rgba(255, 250, 235, 0.7) 47%, transparent 58%) 0 0 / 260% 260%; animation: lm-glint 5.2s ease-in-out infinite; }
+@keyframes lm-glint { 0%, 100% { background-position: 100% 0; } 50% { background-position: 0 100%; } }
+.lm-medal.locked .lm-medal-coin { animation: none; transform: none; filter: grayscale(1) brightness(1.12) contrast(0.85) opacity(0.5); }
+.lm-medal.locked .lm-medal-ribbon, .lm-medal.locked .lm-medal-ring { filter: grayscale(1) opacity(0.35); }
+.lm-medal.locked .lm-medal-icon i { filter: none; color: #e9e4e0; font: 500 calc(var(--m) * 0.3) / 1 Georgia, serif; }
+.lm-medal.locked .lm-medal-shine { display: none; }
+/* 刚解锁：转着落下，星点散开 */
+.lm-medal.drop .lm-medal-coin { animation: lm-medal-drop 1.5s cubic-bezier(0.2, 0.9, 0.3, 1) both 0.25s, lm-wobble 5.2s ease-in-out 1.75s infinite; }
+@keyframes lm-medal-drop { 0% { opacity: 0; transform: translateY(-50px) rotateY(0) scale(0.4); } 25% { opacity: 1; } 100% { transform: translateY(0) rotateY(720deg) scale(1); } }
+.lm-medal.drop .lm-medal-ribbon, .lm-medal.drop .lm-medal-ring { animation: lm-fade-in 500ms ease-out both 1.3s; }
+@keyframes lm-fade-in { from { opacity: 0; } }
+.lm-medal-sparks { position: absolute; left: 50%; top: calc(var(--m) * 0.96); width: 0; height: 0; pointer-events: none; }
+.lm-medal-sparks b { position: absolute; left: -5px; top: -6px; font-size: 10px; line-height: 1; color: var(--lm-gold); text-shadow: 0 0 5px var(--lm-champagne); opacity: 0; animation: lm-spark 1s ease-out both 1.6s; }
+.lm-medal-sparks b:nth-child(even) { color: var(--lm-champagne); font-size: 8px; }
+@keyframes lm-spark { 0% { opacity: 0; transform: rotate(var(--a)) translateY(0) scale(0.3); } 30% { opacity: 1; } 100% { opacity: 0; transform: rotate(var(--a)) translateY(calc(var(--m) * -0.85)) scale(1); } }
+
+/* ── 徽章墙：米白纸半屏抽屉 ── */
+.lm-wall-bg { position: absolute; inset: 0; z-index: 10; background: rgba(76, 54, 61, 0.28); animation: lm-fade-in 0.3s ease-out; }
+.lm-wall { position: absolute; left: 0; right: 0; bottom: 0; max-height: 84%; overflow-y: auto; background: var(--lm-grain), var(--lm-paper); border-top: 1px solid var(--lm-rule); border-radius: 18px 18px 0 0; padding: 10px 20px calc(var(--lm-safe-bot) + 22px);
+  animation: lm-drawer-in 0.42s cubic-bezier(0.2, 0.9, 0.3, 1); }
+.lm-wall .lm-x { top: 22px; }
+.lm-wall h3 { margin: 10px 0 0; font: 500 24px/1.2 var(--lm-cn); letter-spacing: 0.24em; }
+.lm-wall h3 em { font: italic 400 20px/1 var(--lm-en); letter-spacing: 0.02em; color: var(--lm-muted); margin-left: 2px; }
+.lm-wall .sub { margin: 8px 0 0; padding-bottom: 12px; border-bottom: 1px solid var(--lm-rule); font: 500 13px/1.4 var(--lm-mix); letter-spacing: 0.08em; color: var(--lm-muted); }
+.lm-wall-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 6px; margin-top: 14px; }
+.lm-cell { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 12px 4px 10px; border-radius: 12px; transition: background 0.2s, box-shadow 0.2s; color: var(--lm-ink); }
+.lm-cell b { margin-top: 6px; font: 500 13px/1.35 var(--lm-cn); letter-spacing: 0.06em; }
+.lm-cell small { margin-top: 3px; font: 500 12.5px/1.3 var(--lm-mix); color: var(--lm-muted); }
+.lm-cell.on { background: var(--lm-grain), var(--lm-paper-2); box-shadow: inset 0 0 0 1px var(--lm-rule); }
+.lm-cell.locked { cursor: default; }
+.lm-cell.locked b { color: var(--lm-muted); }
+.lm-wall-note { margin: 14px 0 0; padding: 12px 14px; border-left: 2px solid var(--lm-gold); background: var(--lm-grain), var(--lm-paper-2); font: 400 16px/1.7 var(--lm-hand); color: var(--lm-ink); }
+.lm-wall-empty { margin: 18px 0 0; text-align: center; font: 400 14px/1.6 var(--lm-cn); letter-spacing: 0.1em; color: var(--lm-muted); }
+
+/* ── 第一次拆开的仪式：封蜡是唯一的主角。四片纸叠，各自受光、互相投软阴影；坐标无色压印；
+   花体写在封口上，拆的时候跟着封口翻走。拆完接到详情页。 ── */
+.lm-env-overlay { position: absolute; inset: 0; z-index: 11; display: grid; place-items: center; align-content: center; gap: 30px; padding: 20px;
+  background: radial-gradient(ellipse at 50% 42%, rgba(252, 247, 242, 0.38), rgba(234, 219, 216, 0.46) 78%);
+  -webkit-backdrop-filter: blur(3px) saturate(0.9); backdrop-filter: blur(3px) saturate(0.9); animation: lm-fade-in 320ms ease-out; }
+.lm-env { position: relative; width: min(86vw, 350px); aspect-ratio: 3 / 2; border-radius: 4px; cursor: pointer; perspective: 1000px; animation: lm-rise 480ms ease-out;
+  box-shadow: 0 1px 1px rgba(90, 50, 55, 0.06), 0 10px 18px rgba(90, 50, 55, 0.1), 0 32px 60px rgba(90, 50, 55, 0.16); }
+.lm-env > span { position: absolute; display: block; }
+.lm-env-inside { inset: 0; border-radius: 4px; background: linear-gradient(180deg, #e2d2c2, #ece0d2); }
+.lm-env-paper { left: 5%; right: 5%; top: 4%; bottom: 6%; z-index: 1; border-radius: 2px; background: #fcf9f4;
+  background-image: repeating-linear-gradient(transparent 0 15px, rgba(110, 49, 72, 0.08) 15px 16px); box-shadow: 0 0 0 0.5px rgba(90, 60, 50, 0.1); transition: transform 620ms ease-out 1.05s; }
+.lm-env-panel { inset: 0; }
+.lm-env-panel i { position: absolute; inset: 0; }
+.lm-env-panel.side-l { z-index: 2; filter: drop-shadow(1px 0 1.5px rgba(90, 60, 50, 0.1)); }
+.lm-env-panel.side-l i { border-radius: 4px 0 0 4px; clip-path: polygon(0 0, 52% 54%, 0 100%); background: var(--lm-grain), linear-gradient(100deg, #f8f2e8, #f0e7db); }
+.lm-env-panel.side-r { z-index: 2; filter: drop-shadow(-1px 0 1.5px rgba(90, 60, 50, 0.1)); }
+.lm-env-panel.side-r i { border-radius: 0 4px 4px 0; clip-path: polygon(100% 0, 48% 54%, 100% 100%); background: var(--lm-grain), linear-gradient(260deg, #f2e9de, #eadfd1); }
+.lm-env-panel.bottom { z-index: 3; filter: drop-shadow(0 -1.5px 2px rgba(90, 60, 50, 0.13)); }
+.lm-env-panel.bottom i { border-radius: 0 0 4px 4px; clip-path: polygon(0 100%, 50% 46%, 100% 100%); background: var(--lm-grain), linear-gradient(0deg, #efe6da, #f7f0e6); }
+.lm-env-panel.flap { z-index: 5; transform-origin: top center; filter: drop-shadow(0 2px 2.5px rgba(90, 60, 50, 0.16)); transition: transform 520ms ease 0.55s, z-index 0s 0.8s; }
+.lm-env-panel.flap i { border-radius: 4px 4px 0 0; clip-path: polygon(0 0, 100% 0, 50% 60%); background: var(--lm-grain), linear-gradient(180deg, #fbf6ee, #f2e9dd 80%, #eadfd1); }
+.lm-env-panel.flap em { position: absolute; left: 0; right: 0; top: 16%; text-align: center; font: 400 26px/1 var(--lm-script); font-style: normal; color: var(--lm-blush-deep); opacity: 0.8; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+.lm-env-emboss { left: 0; right: 0; bottom: 10%; z-index: 4; display: grid; justify-items: center; gap: 6px; pointer-events: none; font: 600 10px/1 var(--lm-en); letter-spacing: 0.22em; color: #ede3d6;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.95), 0 -1px 0 rgba(120, 85, 70, 0.34); transition: opacity 300ms ease; }
+.lm-env-emboss b { font: 600 12px/1 var(--lm-cn); letter-spacing: 0.45em; }
+.lm-env-seal { left: 50%; top: 60%; width: 78px; height: 78px; margin: -41px 0 0 -39px; z-index: 6; filter: drop-shadow(0 1.5px 1.5px rgba(120, 58, 68, 0.3)) drop-shadow(0 6px 8px rgba(120, 58, 68, 0.14)); transition: transform 360ms ease 0.3s, opacity 360ms ease 0.3s; }
+.lm-env-seal svg { width: 100%; height: 100%; overflow: visible; }
+.lm-env-tip { font: 400 13px/1 var(--lm-cn); letter-spacing: 0.45em; color: var(--lm-muted); }
+.lm-env-overlay.opening .lm-env-seal { transform: scale(0.6); opacity: 0; }
+.lm-env-overlay.opening .lm-env-emboss { opacity: 0; }
+.lm-env-overlay.opening .lm-env-panel.flap { transform: rotateX(180deg); z-index: 0; }
+.lm-env-overlay.opening .lm-env-paper { transform: translateY(-60%); }
+
+/* 插画区里的 SVG 容器 */
+.lm-ill > .art, .lm-sh-ill > .art { display: block; height: 100%; }

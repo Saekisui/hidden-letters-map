@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <title>藏信地图</title>
+  <style>
+    html, body { margin: 0; height: 100%; background: #f3ebe8; color: #4c363d; font-family: "Songti SC", "STSong", "Noto Serif SC", serif; }
+    main { min-height: 100%; display: grid; place-items: center; padding: 24px; box-sizing: border-box; }
+    form { width: min(100%, 320px); background: #f4eee5; border: 1px solid #dfd0ca; border-radius: 16px; padding: 28px 24px; box-shadow: 0 8px 22px rgba(90, 50, 55, 0.1); }
+    h1 { margin: 0; font-weight: 400; font-size: 22px; letter-spacing: 0.2em; }
+    p { margin: 6px 0 18px; font-size: 12px; letter-spacing: 0.1em; color: #9a8388; }
+    input { width: 100%; box-sizing: border-box; height: 46px; padding: 0 14px; border: 1px solid #dfd0ca; border-radius: 10px; background: #fbf8f3; font: inherit; font-size: 16px; color: inherit; outline: none; }
+    input:focus { border-color: #a86b77; }
+    button { margin-top: 14px; width: 100%; height: 48px; border: 0; border-radius: 12px; background: #a86b77; color: #fbf7f1; font: inherit; font-size: 15px; letter-spacing: 0.2em; cursor: pointer; }
+    .err { margin: 10px 0 0; color: #8f5562; font-size: 13px; text-align: center; min-height: 1.2em; }
+  </style>
+</head>
+<body>
+  <main>
+    <form id="f">
+      <h1>藏信地图</h1>
+      <p>Letters along the way</p>
+      <input id="pw" type="password" placeholder="密码" autocomplete="current-password" autofocus />
+      <button type="submit">进来</button>
+      <div class="err" id="err"></div>
+    </form>
+  </main>
+  <script>
+    document.getElementById("f").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const err = document.getElementById("err");
+      err.textContent = "";
+      const res = await fetch("/login", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ password: document.getElementById("pw").value }) });
+      if (res.ok) window.location.href = "/";
+      else err.textContent = "密码不对";
+    });
+  </script>
+</body>
+</html>
