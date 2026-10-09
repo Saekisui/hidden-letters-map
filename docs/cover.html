@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>藏信地图 · 封面</title>
+<!-- 仓库封面（1280×640，GitHub social preview 的尺寸）。改完用无头 Chrome 出图：
+     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless=new --disable-gpu --hide-scrollbars \
+       --force-device-scale-factor=2 --window-size=1280,640 --virtual-time-budget=12000 --screenshot=docs/cover.png file://$PWD/docs/cover.html -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,500&family=Great+Vibes&display=swap" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-regular.css" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #f3ebe8; --paper: #f4eee5; --paper-hi: #fbf7f1; --rule: #dfd0ca; --rule-2: #d2bfb9;
+    --ink: #4c363d; --muted: #9a8388; --plum: #6e3148;
+    --accent: #a86b77; --accent-deep: #8f5562; --accent-soft: #ecd9dc; --on-accent: #fbf7f1;
+    --blush: #dc9aa3; --blush-deep: #c27c87; --blush-tint: #f5e3e1;
+    --gold: #b8995e; --gold-deep: #7e6233; --gold-tint: #f2e9d4;
+    --cn: "Songti SC", "STSong", "Noto Serif SC", serif;
+    --en: "Cormorant Garamond", Georgia, serif;
+    --hand: "LXGW WenKai", "Kaiti SC", "STKaiti", serif;
+    --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45 0 0 0 0 .35 0 0 0 0 .32 0 0 0 .09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  html, body { margin: 0; background: var(--bg); }
+  .cover { position: relative; width: 1280px; height: 640px; overflow: hidden; background: var(--bg); color: var(--ink); font-family: var(--cn); -webkit-font-smoothing: antialiased; }
+  .cover::after { content: ""; position: absolute; inset: 0; background: var(--grain); pointer-events: none; }
+  .bg-map { position: absolute; inset: 0; }
+
+  /* 左：一句话 */
+  .text { position: absolute; left: 88px; top: 150px; width: 470px; }
+  .eyebrow { font: 600 15px/1 var(--en); font-variant-caps: all-small-caps; letter-spacing: 0.34em; color: #8d757b; }
+  h1 { margin: 22px 0 0; font: 400 78px/1.1 var(--cn); letter-spacing: 0.18em; color: var(--ink); }
+  .lead { margin: 26px 0 0; font: 400 25px/1.7 var(--hand); color: #6b5560; }
+  .tags { display: flex; gap: 10px; margin-top: 30px; }
+  .tag { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px 0 11px; border-radius: 8px; border: 1px solid; background: rgba(251, 247, 241, 0.7); font: 400 15px/1 var(--cn); letter-spacing: 0.14em; }
+  .tag svg { width: 18px; height: 18px; }
+  .t-letter { color: var(--blush-deep); border-color: rgba(194, 124, 135, 0.55); }
+  .t-voice { color: #7d5f68; border-color: rgba(110, 49, 72, 0.3); }
+  .t-badge { color: var(--gold-deep); border-color: rgba(184, 153, 94, 0.65); }
+  .steps { margin-top: 44px; display: flex; align-items: center; gap: 14px; font: italic 500 20px/1 var(--en); letter-spacing: 0.06em; color: var(--muted); }
+  .steps i { width: 26px; height: 1px; background: var(--rule-2); }
+
+  /* 右：歪着的地图卡 */
+  .card { position: absolute; left: 626px; top: 46px; width: 612px; height: 548px; border-radius: 24px; background: var(--grain), var(--paper); border: 1px solid var(--rule);
+    box-shadow: 0 24px 60px rgba(90, 50, 55, 0.18), 0 2px 6px rgba(90, 50, 55, 0.08); transform: rotate(-2.2deg); overflow: hidden; }
+  .card svg.scene { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .card::after { content: ""; position: absolute; inset: 0; background: var(--grain); pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="cover">
+  <svg class="bg-map" viewBox="0 0 1280 640" aria-hidden="true">
+    <!-- 底图：几条很淡的手绘街道，只在右半 -->
+    <g fill="none" stroke="#e6d8d3" stroke-linecap="round">
+      <path d="M560 -20C640 120 520 260 640 380S880 520 980 680" stroke-width="12"/>
+      <path d="M700 -30C760 140 900 160 1000 260S1180 400 1310 420" stroke-width="12"/>
+      <path d="M1040 -20C1000 140 1120 260 1080 420S1180 600 1230 680" stroke-width="12"/>
+      <path d="M520 560C640 520 760 600 900 560S1120 560 1300 520" stroke-width="12"/>
+      <path d="M460 300C560 310 620 240 760 260S900 360 1040 320" stroke-width="12"/>
+    </g>
+    <g fill="#ece0dc"><rect x="820" y="40" width="90" height="70" rx="10" transform="rotate(-8 865 75)"/><rect x="1130" y="200" width="70" height="110" rx="10" transform="rotate(6 1165 255)"/><rect x="600" y="470" width="120" height="60" rx="10" transform="rotate(-4 660 500)"/></g>
+  </svg>
+
+  <div class="text">
+    <div class="eyebrow">Letters along the way</div>
+    <h1>藏信地图</h1>
+    <p class="lead">把信、语音、徽章藏在真实的地方，<br/>对方走到附近才拿得到。</p>
+    <div class="tags">
+      <span class="tag t-letter"><svg viewBox="-13 -10 26 20"><g id="tag-env"></g></svg>信</span>
+      <span class="tag t-voice"><svg viewBox="0 0 18 18"><g fill="none" stroke="#7d5f68" stroke-width="1.6" stroke-linecap="round"><path d="M3 7v4M6.5 4v10M10 6.5v5M13.5 3v12M17 7.5v3"/></g></svg>语音</span>
+      <span class="tag t-badge"><svg viewBox="-10 -10 20 20"><g id="tag-coin"></g></svg>徽章</span>
+    </div>
+    <div class="steps">hide it<i></i>walk there<i></i>open it</div>
+  </div>
+
+  <div class="card"><svg class="scene" viewBox="0 0 612 548" id="scene"></svg></div>
+</div>
+
+<script>
+// 画法和 LettersPage.jsx 同一套：封蜡信封 / 玫瑰 / 旧金币 / 小图钉 / 泪滴气泡
+const INK = "#6e3148", ACCENT = "#a86b77", ACCENT_DEEP = "#8f5562", ACCENT_LIGHT = "#d9b0ba";
+const esc = (t) => String(t).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
+const f2 = (v) => v.toFixed(2);
+const HEART = "M0 4.2C-1.6 3.1-5 .9-5-1.6c0-1.4 1.1-2.6 2.5-2.6.9 0 1.9.5 2.5 1.4.6-.9 1.6-1.4 2.5-1.4 1.4 0 2.5 1.2 2.5 2.6C5 .9 1.6 3.1 0 4.2Z";
+const star = (x, y, s, c) => `<path transform="translate(${x} ${y})" d="M0 ${-s}Q0 0 ${s} 0Q0 0 0 ${s}Q0 0 ${-s} 0Q0 0 0 ${-s}Z" fill="${c}"/>`;
+function waxPath(r) { let d = ""; for (let i = 0; i <= 48; i++) { const a = (i / 48) * Math.PI * 2; const rr = r * (1 + 0.06 * Math.sin(a * 12) + 0.03 * Math.sin(a * 5 + 1)); d += `${i ? "L" : "M"}${f2(Math.cos(a) * rr)} ${f2(Math.sin(a) * rr)}`; } return `${d}Z`; }
+const wax = (x, y, r, grad = "lmWax") => `<g transform="translate(${x} ${y})"><path d="${waxPath(r)}" fill="url(#${grad})"/><circle r="${f2(r * 0.68)}" fill="none" stroke="#fff" stroke-opacity=".4" stroke-width="${f2(r * 0.09)}"/><path d="${HEART}" transform="translate(0 ${f2(r * 0.05)}) scale(${(r * 0.1).toFixed(3)})" fill="#fff" fill-opacity=".66"/></g>`;
+const envSmall = (grad = "lmWax") => `<g transform="rotate(-6)"><rect x="-11" y="-7.6" width="22" height="15.2" rx="1.6" fill="#fcf8f1" stroke="${INK}" stroke-opacity=".72" stroke-width="1"/><path d="M-10.3-6.7 0 1.2 10.3-6.7" fill="none" stroke="${INK}" stroke-opacity=".72" stroke-width=".9" stroke-linejoin="round"/>${wax(0, 1.6, 4.4, grad)}</g>`;
+const ROSE_PATHS = '<path d="M20 11c-4.4 0-8 3.4-8 7.8s3.6 7.6 8 7.6 8-3.2 8-7.6"/><path d="M20 14.6c-2.4 0-4.4 1.9-4.4 4.2s2 4 4.4 4 4.2-1.7 4.2-4"/><path d="M20 17.6c-.9 0-1.5.6-1.5 1.3s.6 1.2 1.4 1.2"/><path d="M12.5 15.5c1.5-3 4.3-4.5 7.5-4.5 3 0 5.8 1.6 7.4 4.3"/><path d="M20 26.4V35"/><path d="M20 31.2c-3.4-.4-5.6-2.3-6.4-4.8 3.1-.1 5.4 1.6 6.4 4.8Z"/><path d="M20 32.4c3-.8 4.8-2.8 5.2-5.3-2.9.4-4.7 2.3-5.2 5.3Z"/>';
+const rose = (x, y, s, c = "#c27c87", w = 1.15) => `<g transform="translate(${x} ${y}) scale(${s}) translate(-20 -23)" fill="none" stroke="${c}" stroke-width="${(w / s).toFixed(2)}" stroke-linecap="round" stroke-linejoin="round">${ROSE_PATHS}</g>`;
+const pushpin = (x, y, s) => `<g transform="translate(${x} ${y}) scale(${s}) rotate(14) translate(-12 -16)"><path d="M12 17v12" stroke="${INK}" stroke-width="1.3" stroke-linecap="round"/><ellipse cx="12" cy="16" rx="4.2" ry="1.7" fill="#c27c87"/><circle cx="12" cy="9" r="7.5" fill="url(#lmWax)" stroke="#c27c87" stroke-width=".8"/><circle cx="9.4" cy="6.4" r="2.1" fill="#fff" fill-opacity=".6"/></g>`;
+const coin = (r, emoji) => `<circle r="${r}" fill="url(#lmGold)"/><circle r="${f2(r * 0.9)}" fill="none" stroke="#4d3818" stroke-opacity=".45" stroke-width="${f2(r * 0.14)}" stroke-dasharray="${f2(r * 0.05)} ${f2(r * 0.1)}"/><circle r="${f2(r * 0.66)}" fill="url(#lmGold)"/><circle r="${f2(r * 0.58)}" fill="url(#lmEnamel)"/><text y="${f2(r * 0.23)}" font-size="${f2(r * 0.62)}" text-anchor="middle" filter="url(#lmSepia)">${esc(emoji)}</text><path d="M${f2(-r * 0.75)} ${f2(-r * 0.4)}A${f2(r * 0.85)} ${f2(r * 0.85)} 0 0 1 ${f2(-r * 0.27)} ${f2(-r * 0.8)}" stroke="#fff6dc" stroke-opacity=".75" stroke-width="${f2(r * 0.1)}" fill="none" stroke-linecap="round"/>`;
+const TEAR = "M24 57Q22.2 52 17 42.8A21 21 0 1 1 31 42.8Q25.8 52 24 57Z";
+// 泪滴气泡：x,y 是针尖落点，s 缩放
+function bubble(x, y, s, inner, o = {}) {
+  const ring = o.ring || "#fffaf4", bg = o.bg || "#f5e3e1", stroke = o.stroke != null ? o.stroke : ' stroke="#dfd0ca" stroke-width="1"';
+  return `<g transform="translate(${x - 24 * s} ${y - 57 * s}) scale(${s})" filter="url(#lmDrop)"><path d="${TEAR}" fill="${ring}"${stroke}/><circle cx="24" cy="23" r="17" fill="${bg}"/><circle cx="24" cy="23" r="17" fill="url(#lmGrainP)" stroke="${o.inner || "#e6d6cf"}" stroke-width=".8"/><g transform="translate(24 23)">${inner}</g></g>`;
+}
+const PLANE = '<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>';
+const medalSvg = (emoji) => `<g><path d="M23 0H41V18.5L32 25 23 18.5Z" fill="url(#lmRibbon)"/><path d="M23 0H41V18.5L32 25 23 18.5Z" fill="url(#lmRibbonShade)"/><ellipse cx="32" cy="27.5" rx="3" ry="3.6" fill="none" stroke="#a8884c" stroke-width="1.5"/><circle cx="32" cy="51" r="21.5" fill="url(#lmGold)"/><circle cx="32" cy="51" r="20.2" fill="none" stroke="#4d3818" stroke-opacity=".45" stroke-width="2" stroke-dasharray=".55 1.1"/><circle cx="32" cy="51" r="18.4" fill="none" stroke="#4d3818" stroke-opacity=".35" stroke-width=".5"/><circle cx="32" cy="51" r="13.4" fill="url(#lmGold)"/><circle cx="32" cy="51" r="12.2" fill="url(#lmEnamel)"/><text x="32" y="55" font-size="12" text-anchor="middle" filter="url(#lmSepia)">${esc(emoji)}</text><path d="M15.6 43.5a18 18 0 0 1 9.4-10" stroke="#fff6dc" stroke-opacity=".7" stroke-width="1.6" fill="none" stroke-linecap="round"/></g>`;
+// 纸签：kick 小字 + 一行宋体
+function tag(x, y, kick, text, o = {}) {
+  const w = o.w || 200, rot = o.rot || 0, kc = o.kc || "#c27c87";
+  return `<g transform="translate(${x} ${y}) rotate(${rot})" filter="url(#lmDrop)"><rect width="${w}" height="46" rx="9" fill="#fbf7f1" stroke="#dfd0ca"/><rect width="${w}" height="46" rx="9" fill="url(#lmGrainP)"/>
+    <text x="14" y="18" font-family="Cormorant Garamond, Georgia, serif" font-weight="600" font-size="10.5" letter-spacing="2.6" fill="${kc}">${esc(kick)}</text>
+    <text x="14" y="36" font-family="${o.hand ? "LXGW WenKai, Kaiti SC, serif" : "Songti SC, STSong, serif"}" font-size="${o.hand ? 14.5 : 13.5}" letter-spacing="${o.hand ? 0 : 1}" fill="#4c363d">${esc(text)}</text></g>`;
+}
+const stop = (x, y, n) => `<g transform="translate(${x} ${y})" filter="url(#lmDrop)"><circle r="15" fill="#fbf7f1"/><circle r="15" fill="none" stroke="#b8995e" stroke-width="1.5"/><circle r="12" fill="none" stroke="#b8995e" stroke-opacity=".55" stroke-width=".8"/><text y="5.5" font-family="Cormorant Garamond, Georgia, serif" font-weight="600" font-size="15" text-anchor="middle" fill="#7e6233">${n}</text></g>`;
+
+const DEFS = `<defs>
+  <radialGradient id="lmFogGrad" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#E3A2AC" stop-opacity=".42"/><stop offset=".62" stop-color="#DC9AA3" stop-opacity=".24"/><stop offset="1" stop-color="#DC9AA3" stop-opacity=".07"/></radialGradient>
+  <linearGradient id="lmGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f3e5bf"/><stop offset=".3" stop-color="#cdb074"/><stop offset=".52" stop-color="#957340"/><stop offset=".74" stop-color="#dcc48c"/><stop offset="1" stop-color="#6f532a"/></linearGradient>
+  <radialGradient id="lmEnamel" cx=".38" cy=".32" r=".8"><stop offset="0" stop-color="#8f2d46"/><stop offset=".55" stop-color="#5d1729"/><stop offset="1" stop-color="#360a17"/></radialGradient>
+  <radialGradient id="lmWax" cx=".36" cy=".3" r=".78"><stop offset="0" stop-color="#f4d0d4"/><stop offset=".55" stop-color="#dc9aa3"/><stop offset="1" stop-color="#bf7782"/></radialGradient>
+  <radialGradient id="lmWaxAccent" cx=".36" cy=".3" r=".78"><stop offset="0" stop-color="${ACCENT_LIGHT}"/><stop offset=".55" stop-color="${ACCENT}"/><stop offset="1" stop-color="${ACCENT_DEEP}"/></radialGradient>
+  <linearGradient id="lmRibbon" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4a1222"/><stop offset=".14" stop-color="#4a1222"/><stop offset=".14" stop-color="#eadfc4"/><stop offset=".21" stop-color="#eadfc4"/><stop offset=".21" stop-color="#b0904f"/><stop offset=".25" stop-color="#b0904f"/><stop offset=".25" stop-color="#6b1d33"/><stop offset=".75" stop-color="#6b1d33"/><stop offset=".75" stop-color="#b0904f"/><stop offset=".79" stop-color="#b0904f"/><stop offset=".79" stop-color="#eadfc4"/><stop offset=".86" stop-color="#eadfc4"/><stop offset=".86" stop-color="#4a1222"/><stop offset="1" stop-color="#4a1222"/></linearGradient>
+  <linearGradient id="lmRibbonShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient>
+  <filter id="lmSepia" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values=".43 .85 .21 0 0  .38 .75 .18 0 0  .3 .58 .14 0 0  0 0 0 1 0"/></filter>
+  <filter id="lmGrainF" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="0 0 0 0 .45  0 0 0 0 .35  0 0 0 0 .32  0 0 0 .09 0"/></filter>
+  <pattern id="lmGrainP" width="140" height="140" patternUnits="userSpaceOnUse"><rect width="140" height="140" filter="url(#lmGrainF)"/></pattern>
+  <filter id="lmDrop" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="5" stdDeviation="4" flood-color="#5a3237" flood-opacity=".16"/><feDropShadow dx="0" dy="1" stdDeviation=".8" flood-color="#5a3237" flood-opacity=".12"/></filter>
+  <filter id="lmGlow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="${ACCENT}" flood-opacity=".4"/></filter>
+</defs>`;
+
+// 卡里的场景（612×548）
+const S = [DEFS];
+// 底图：烟粉街道 + 一块公园
+S.push(`<rect width="612" height="548" fill="#f3ebe8"/>`);
+S.push(`<g fill="none" stroke="#e6d8d3" stroke-linecap="round" stroke-width="11">
+  <path d="M-20 140C80 120 140 200 230 170S380 60 470 110 600 90 640 130"/>
+  <path d="M60 -20C40 90 120 170 90 280S20 420 70 560"/>
+  <path d="M-20 400C100 370 180 440 300 410S480 330 640 380"/>
+  <path d="M420 -20C390 100 470 200 440 320S520 480 500 570"/>
+  <path d="M250 190C300 260 240 340 290 420S380 520 360 580"/>
+</g>
+<g fill="none" stroke="#dccbc6" stroke-width="2"><path d="M-20 260C120 250 200 300 330 270S520 230 640 250"/><path d="M160 -20C190 120 150 260 200 400S180 520 220 570"/></g>
+<path d="M330 330c60-30 140 0 150 60s-60 90-120 70-90-100-30-130Z" fill="#ead9d3" opacity=".8"/>`);
+// 上角：计数 + 徽章圆钮
+S.push(`<text x="26" y="40" font-family="Songti SC, STSong, serif" font-size="13" letter-spacing="1.5" fill="#9a8388"><tspan font-family="Cormorant Garamond, Georgia, serif" font-weight="600" font-size="16" fill="#4c363d">2</tspan> 处还藏着 <tspan fill="#d2bfb9"> | </tspan> <tspan font-family="Cormorant Garamond, Georgia, serif" font-weight="600" font-size="16" fill="#4c363d">1</tspan> 处找到了</text>`);
+S.push(`<g transform="translate(560 40)" filter="url(#lmDrop)"><circle r="22" fill="#f4eee5" stroke="#dfd0ca"/><circle r="22" fill="url(#lmGrainP)"/><g transform="scale(1.15)">${coin(11.5, "★")}</g><circle cx="17" cy="-16" r="10" fill="#4c363d" stroke="#f4eee5" stroke-width="1.5"/><text x="17" y="-11.5" font-family="Cormorant Garamond, Georgia, serif" font-weight="600" font-size="13" text-anchor="middle" fill="#f4eee5">3</text></g>`);
+// 路线：1 飞到 2，2 走到 3；足迹从 3 走进雾圈
+S.push(`<path d="M70 118C150 40 240 40 330 86" fill="none" stroke="#a27b85" stroke-width="1.4" stroke-dasharray="5 6" opacity=".55"/>
+<path d="M330 86C400 130 470 110 528 160" fill="none" stroke="#a27b85" stroke-width="2.2" stroke-linecap="round" stroke-dasharray=".1 7" opacity=".75"/>`);
+S.push(`<g transform="translate(200 58)" filter="url(#lmDrop)"><circle r="14" fill="#fbf7f1" stroke="#dfd0ca"/><g transform="translate(-8 -8) scale(.68)" fill="#f4eee5" stroke="${INK}" stroke-width="1.3" stroke-linejoin="round"><g transform="rotate(32 12 12)">${PLANE}</g></g></g>`);
+// 足迹：腮红粉实线，米白描边
+S.push(`<path d="M528 160C520 220 470 250 420 290S372 312 356 318" fill="none" stroke="#fbf7f1" stroke-width="6.5" stroke-linecap="round" opacity=".9"/>
+<path d="M528 160C520 220 470 250 420 290S372 312 356 318" fill="none" stroke="#c27c87" stroke-width="2.3" stroke-linecap="round"/>`);
+// 雾圈
+S.push(`<circle cx="230" cy="318" r="118" fill="url(#lmFogGrad)" stroke="#c27c87" stroke-width="1.5" stroke-dasharray="1.5 6" stroke-linecap="round" stroke-opacity=".85"/>`);
+S.push(stop(70, 118, 1) + stop(330, 86, 2) + stop(528, 160, 3));
+// 封着的：雾圈正中的大气泡（最近那封，玫瑰木环 + 光晕）
+S.push(`<g filter="url(#lmGlow)">${bubble(230, 318, 1.5, envSmall("lmWaxAccent"), { ring: ACCENT, stroke: "", bg: "#fffaf4", inner: "#fffaf4" })}</g>`);
+S.push(tag(262, 214, "SEALED · 谜语", "墙是蓝的，里面住过一直在画自己的人", { w: 262, rot: 2, hand: true }));
+// 她：玫瑰木圆点 + 呼吸光，正站在圈边
+S.push(`<g transform="translate(356 318)"><circle r="26" fill="${ACCENT}" opacity=".16"/><circle r="15" fill="${ACCENT}" opacity=".22"/><circle r="9" fill="${ACCENT}" stroke="#fbf7f1" stroke-width="3.2"/><circle r="11" fill="none" stroke="#c27c87" stroke-opacity=".45"/></g>`);
+S.push(tag(372, 334, "HERE", "你就在这片圈里", { w: 150, rot: -3, kc: ACCENT_DEEP }));
+// 拆开过的：旧金币气泡 + 证书签
+S.push(bubble(468, 466, 1.2, coin(11.5, "🌮"), { bg: "#f2e9d4" }));
+S.push(tag(396, 474, "OPENED · 解锁徽章", "科约阿坎集市 · 集市小探员", { w: 198, rot: -2, kc: "#7e6233" }));
+// 我来过：小图钉 + 留言
+S.push(bubble(96, 470, 1.0, pushpin(0, 0, 0.82), { bg: "#f4eee5" }));
+S.push(tag(112, 418, "I WAS HERE", "这家冰淇淋店超好吃，下次带你来", { w: 232, rot: 1.5, kc: "#4c363d", hand: true }));
+// 星点
+S.push(star(150, 240, 5, "#fffaf4") + star(560, 300, 4, "#dc9aa3") + star(90, 330, 3.5, "#b8995e") + star(590, 500, 4.5, "#fffaf4"));
+// 底栏：小纸胶囊 + 玫瑰木大圆钮
+S.push(`<g transform="translate(272 512)"><rect x="-118" y="-27" width="236" height="54" rx="27" fill="#f4eee5" stroke="#dfd0ca" filter="url(#lmDrop)"/><rect x="-118" y="-27" width="236" height="54" rx="27" fill="url(#lmGrainP)"/>
+  <g transform="translate(-74 -6)" fill="none" stroke="#ab8f95" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M-6 3a6 6 0 0 1 12 0v3l2 2H-8l2-2zM-2 10a2 2 0 0 0 4 0"/></g>
+  <text x="-74" y="19" font-family="Songti SC, STSong, serif" font-size="9.5" letter-spacing="1.3" text-anchor="middle" fill="#9a8388">开通知</text>
+  <g transform="translate(74 -6)" fill="none" stroke="#ab8f95" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M0 11s-6-5.2-6-9.5A6 6 0 0 1 6 1.5C6 5.8 0 11 0 11z"/><circle cy="1.5" r="2"/></g>
+  <text x="74" y="19" font-family="Songti SC, STSong, serif" font-size="9.5" letter-spacing="1.3" text-anchor="middle" fill="#9a8388">我来过</text>
+  <circle cy="-16" r="33" fill="#f4eee5"/><circle cy="-16" r="28" fill="${ACCENT}" filter="url(#lmGlow)"/><circle cy="-16" r="28" fill="url(#lmGrainP)"/>
+  <g transform="translate(-1 -15)" fill="none" stroke="#fbf7f1" stroke-width="1.8" stroke-linejoin="round"><path d="M11-11-2 12l-1.5-8.5L-11 2z"/></g></g>`);
+document.getElementById("scene").innerHTML = S.join("");
+document.getElementById("tag-env").outerHTML = `<g>${envSmall()}</g>`;
+document.getElementById("tag-coin").outerHTML = `<g>${coin(8.5, "★")}</g>`;
+// 左边小标签里的渐变要能引用到：把 defs 也塞一份进文档
+const d = document.createElementNS("http://www.w3.org/2000/svg", "svg"); d.setAttribute("width", 0); d.setAttribute("height", 0); d.style.position = "absolute"; d.innerHTML = DEFS; document.body.appendChild(d);
+</script>
+</body>
+</html>
