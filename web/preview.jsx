@@ -65,6 +65,9 @@ window.fetch = async (url, opts = {}) => {
   return json({ error: "mock: unknown" }, 404);
 };
 
+// 架子里「开通知」不弹权限框：当成不支持推送的设备
+Object.defineProperty(window, "PushManager", { value: undefined, configurable: true });
+
 // 手机定位：人就在科约阿坎，实时定位每 3 秒飘一点
 const pos = (i = 0) => ({ coords: { latitude: HER.lat + i * 0.00012, longitude: HER.lon + i * 0.00008, accuracy: 12 } });
 Object.defineProperty(navigator, "geolocation", {

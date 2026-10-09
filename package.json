@@ -9,6 +9,7 @@
     "start": "node --env-file=.env server.js",
     "dev": "vite",
     "build": "vite build",
+    "build:demo": "vite build --config vite.demo.config.js && mv docs/demo/preview.html docs/demo/index.html",
     "test": "node --test letters.test.js",
     "mcp": "node mcp/letters-mcp.js"
   },

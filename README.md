@@ -2,6 +2,8 @@
 
 <p align="center"><img src="docs/cover.png" alt="藏宝地图：把信、语音、成就藏在真实的地方，对方走到附近才拿得到" width="100%"></p>
 
+<p align="center"><a href="https://saekisui.github.io/hidden-letters-map/demo/"><b>手机上试玩 ↗</b></a>（假数据，不用装任何东西）</p>
+
 把信、一段语音、一个成就藏在真实的地方。对方的地图上只看得到一片模糊的圈和一句谜语，人走到附近才拿得到。
 
 - **藏宝人**：在某个地方藏东西、画旅行路线、直接发成就。用 Claude Code / Claude Desktop 之类的 MCP 客户端操作，或者直接 curl。
@@ -195,7 +197,7 @@ server.js             Express：文件读写、鉴权、位置入口、推送
 mcp/letters-mcp.js    MCP server，只走 HTTP 到 server.js
 web/LettersPage.jsx   寻宝人的页面（React + Leaflet）
 web/letters.css
-web/preview.jsx       假数据预览：npm run dev 后开 http://localhost:5173/preview.html，不用起 server
+web/preview.jsx       假数据预览：npm run dev 后开 http://localhost:5173/preview.html?phone，不用起 server；npm run build:demo 打成 docs/demo/ 当线上试玩
 public/               登录页、sw.js、manifest、图标
 docs/cover.html       仓库封面的源文件（无头 Chrome 出 PNG，命令在文件头）
 ```

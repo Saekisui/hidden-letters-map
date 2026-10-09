@@ -29,6 +29,8 @@
   .lead b { color: var(--ink); font-weight: 500; }
   .btn { display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 22px; border-radius: 12px; background: var(--accent); color: var(--on-accent); text-decoration: none; font-size: 15px; letter-spacing: 0.2em; box-shadow: 0 8px 18px rgba(168, 107, 119, 0.32); }
   .btn:active { transform: scale(0.98); }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1px solid #d2bfb9; box-shadow: none; }
+  .btns { display: flex; gap: 12px; flex-wrap: wrap; }
   .en { font: italic 500 15px/1 "Cormorant Garamond", Georgia, serif; letter-spacing: 0.06em; color: var(--muted); }
   footer { margin-top: 40px; font: 500 12px/1 "Cormorant Garamond", Georgia, serif; letter-spacing: 0.28em; text-transform: uppercase; color: #b8a5a9; }
 </style>
@@ -37,8 +39,8 @@
 <main>
   <a href="https://github.com/Saekisui/hidden-letters-map"><img class="cover" src="cover.png" width="1280" height="640" alt="藏宝地图：把信、语音、成就藏在真实的地方，对方走到附近才拿得到" /></a>
   <div class="row">
-    <p class="lead"><b>藏宝地图</b> · 把信、语音、成就藏在真实的地方，对方走到附近才拿得到。<br /><span class="en">hide it · walk there · open it</span></p>
-    <a class="btn" href="https://github.com/Saekisui/hidden-letters-map">GitHub ↗</a>
+    <p class="lead"><b>藏宝地图</b> · 把信、语音、成就藏在真实的地方，对方走到附近才拿得到。<br /><span class="en">hide it · walk there · open it</span><br /><span class="en">试玩是假数据：人在墨西哥城，附近藏着几封，拆开过一封。</span></p>
+    <div class="btns"><a class="btn" href="demo/">手机上试玩 ↗</a><a class="btn ghost" href="https://github.com/Saekisui/hidden-letters-map">GitHub ↗</a></div>
   </div>
   <footer>Treasures along the way · MIT</footer>
 </main>
