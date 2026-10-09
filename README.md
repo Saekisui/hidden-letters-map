@@ -36,6 +36,7 @@ iPhone 上：Safari 打开 → 分享 → 添加到主屏幕。从主屏幕打�
 | `HIDER_NAME` / `FINDER_NAME` | 页面上怎么称呼两个人：信的落款「—— 阿笙」、成就上一圈「FOR 小满 · WITH LOVE」 |
 | `TZ` | 「来过几天才解锁」按哪个时区算一天，不填按系统时区 |
 | `VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` / `VAPID_SUBJECT` | 推送用，可选，见下面 |
+| `GOOGLE_MAPS_API_KEY` | 街景用，可选，见下面 |
 
 ---
 
@@ -162,9 +163,25 @@ iPhone 上要先把页面加到主屏幕、从主屏幕打开，Safari 里直接
 
 ---
 
+## 街景（可选）
+
+配了 Google Maps 的钥匙，藏东西的时候 server 会抓一张那个地点附近的街景存下来，拆开以后详情页里谜语下面贴着。不配也能用，只是少这一张。
+
+1. 在 [Google Cloud Console](https://console.cloud.google.com/) 开 **Street View Static API**，建一把钥匙。
+2. 填进 `.env` 的 `GOOGLE_MAPS_API_KEY`，重启。
+
+细节：
+
+- 抓之前先走一次 metadata 接口问那里有没有覆盖（这一步不计费），没有就跳过。一封信只抓一张，走免费额度绰绰有余。
+- 钥匙只在你的 server 上，寻宝人的手机不碰 Google。图片存在 `data/streetview/`，接口只给拆开了的信，拿着封着的信的 id 也取不到。
+- 藏的时候坐标会发给 Google 一次，这是这个功能唯一多出去的一条请求。
+- 收回还没被找到的信时，那张图一起删。
+
+---
+
 ## 数据与隐私
 
-- 全部数据在 `data/` 下的几个 JSON 文件里，没有数据库：`map.json`（站点 / 信 / 成就 / 图钉）、`track.jsonl`、`last-seen.json`、`push-subscriptions.json`。备份就是拷这个目录。
+- 全部数据在 `data/` 下，没有数据库：`map.json`（站点 / 信 / 成就 / 图钉）、`track.jsonl`、`last-seen.json`、`push-subscriptions.json`，还有 `streetview/` 里的图。备份就是拷这个目录。
 - 寻宝人的页面只拿 `/api/travel-map`，封着的信只有模糊圈（半径是信的 3 倍、圆心随机偏开）、谜语、藏了哪几样。
 - 地图瓦片来自 OpenStreetMap 官方服务器，字体来自 Google Fonts 和 jsDelivr（霞鹜文楷）。不想出网就把 `web/letters.css` 顶上两行 `@import` 换成自己的。
 

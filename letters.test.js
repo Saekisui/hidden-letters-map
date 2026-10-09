@@ -97,18 +97,20 @@ test("visitAt：普通的走到就找到；健身房那种一天记一次，攒�
 });
 
 test("publicLetter：封着的只说藏了哪几样，找到给位置，拆开才给信 / 语音 / 成就", () => {
-  const letter = createLetter({ place: "蓝房子", ...CASA_AZUL, hint: "谜语", body: "正文", voice: { url: "/v.m4a", text: "t" }, badge: { name: "成就" } });
+  const letter = { ...createLetter({ place: "蓝房子", ...CASA_AZUL, hint: "谜语", body: "正文", voice: { url: "/v.m4a", text: "t" }, badge: { name: "成就" } }), streetView: { file: "x.jpg", date: "2024-03" } };
   const sealed = publicLetter(letter);
-  for (const k of ["place", "lat", "lon", "body", "radiusM", "voice", "badge"]) assert.ok(!(k in sealed), `sealed leaks ${k}`);
+  for (const k of ["place", "lat", "lon", "body", "radiusM", "voice", "badge", "streetView"]) assert.ok(!(k in sealed), `sealed leaks ${k}`);
   assert.equal(sealed.hint, "谜语");
   assert.deepEqual(sealed.contents, ["letter", "voice", "badge"]);
   const found = publicLetter({ ...letter, status: "found" });
   assert.equal(found.place, "蓝房子");
-  for (const k of ["body", "voice", "badge"]) assert.ok(!(k in found), `found leaks ${k}`);
+  for (const k of ["body", "voice", "badge", "streetView"]) assert.ok(!(k in found), `found leaks ${k}`);
   const opened = publicLetter({ ...letter, status: "opened" });
   assert.equal(opened.body, "正文");
   assert.equal(opened.voice.url, "/v.m4a");
   assert.equal(opened.badge.name, "成就");
+  assert.deepEqual(opened.streetView, { url: `/api/travel-map/letters/${letter.id}/streetview.jpg`, date: "2024-03" });
+  assert.equal(publicLetter({ ...letter, status: "opened", streetView: null }).streetView, null, "没抓到街景就是 null");
 });
 
 test("createStop / sortStops：按日期、同日按加入顺序", () => {

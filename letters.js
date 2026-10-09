@@ -139,12 +139,13 @@ export function visitAt(letters, pos, { now = Date.now(), tz } = {}) {
 }
 
 // 寻宝人的页面拿到的样子：还封着的只给模糊圈、谜语、藏了哪几样——没有地名、坐标、内容，开发者工具里也偷看不到；
-// 找到了才给地名和真实位置；拆开了才给信、语音、成就。
+// 找到了才给地名和真实位置；拆开了才给信、语音、成就、街景。
 export function publicLetter(l) {
   const base = { id: l.id, status: l.status, hint: l.hint, area: l.area, contents: contentsOf(l), createdAt: l.createdAt };
   if ((l.visitsNeeded || 1) > 1) Object.assign(base, { visits: (l.visitDays || []).length, visitsNeeded: l.visitsNeeded });
   if (l.status === "sealed") return base;
   const found = { ...base, place: l.place, lat: l.lat, lon: l.lon, foundAt: l.foundAt };
   if (l.status === "found") return found;
-  return { ...found, body: l.body, voice: l.voice || null, badge: l.badge || null, openedAt: l.openedAt };
+  const streetView = l.streetView ? { url: `/api/travel-map/letters/${l.id}/streetview.jpg`, date: l.streetView.date || null } : null;
+  return { ...found, body: l.body, voice: l.voice || null, badge: l.badge || null, streetView, openedAt: l.openedAt };
 }

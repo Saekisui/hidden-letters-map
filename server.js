@@ -2,11 +2,11 @@
 // server.js — 藏宝地图的服务端：存地图、收手机上报的位置、判定到访、推送、给页面和 MCP 提供接口。
 // 逻辑在 letters.js；这里只管文件、HTTP 和推送。数据全是 data/ 下的几个 JSON 文件，没有数据库。
 //
-// 环境变量见 .env.example：PASSWORD（必填）、PORT、DATA_DIR、HIDER_NAME、FINDER_NAME、TZ、VAPID_*。
+// 环境变量见 .env.example：PASSWORD（必填）、PORT、DATA_DIR、HIDER_NAME、FINDER_NAME、TZ、VAPID_*、GOOGLE_MAPS_API_KEY。
 
 import express from "express";
 import webpush from "web-push";
-import { appendFileSync, existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { appendFileSync, existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createBadge, createLetter, createMark, createStop, distanceM, lettersInReach, publicLetter, shouldRecordFrame, sortStops, visitAt } from "./letters.js";
@@ -24,6 +24,7 @@ const MAP_FILE = join(DATA_DIR, "map.json"); // 站点 / 信 / 成就 / 图钉
 const TRACK_FILE = join(DATA_DIR, "track.jsonl"); // 足迹，一行一个点
 const SEEN_FILE = join(DATA_DIR, "last-seen.json"); // 手机最后一次上报的位置
 const SUBS_FILE = join(DATA_DIR, "push-subscriptions.json");
+const SV_DIR = join(DATA_DIR, "streetview"); // 藏的时候抓的街景，一封一张
 
 const readJson = (file, fallback) => { try { return JSON.parse(readFileSync(file, "utf-8")); } catch { return fallback; } };
 const writeJson = (file, data) => writeFileSync(file, JSON.stringify(data, null, 2) + "\n");
@@ -71,6 +72,24 @@ async function pushAll(title, body, url = "/") {
     }
   }
   if (keep.length !== subs.length) writeJson(SUBS_FILE, keep);
+}
+
+// ── 街景（可选）：藏的时候抓一张存下来，拆开以后详情页里露出来 ─────────────────────
+// 先问 metadata 接口有没有覆盖（这一步不计费），有才下图。钥匙只在这台 server 上，寻宝人的手机不碰 Google。
+const GOOGLE_KEY = process.env.GOOGLE_MAPS_API_KEY || "";
+if (!GOOGLE_KEY) console.log("[streetview] 没配 GOOGLE_MAPS_API_KEY，藏东西时不抓街景");
+async function captureStreetView(letter) {
+  if (!GOOGLE_KEY) return null;
+  const q = `location=${letter.lat},${letter.lon}&radius=150&source=outdoor&key=${GOOGLE_KEY}`;
+  const meta = await fetch(`https://maps.googleapis.com/maps/api/streetview/metadata?${q}`, { signal: AbortSignal.timeout(10000) }).then((r) => r.json());
+  if (meta.status !== "OK") { console.log(`[streetview] 「${letter.place}」附近没有街景（${meta.status}）`); return null; }
+  const img = await fetch(`https://maps.googleapis.com/maps/api/streetview?size=640x400&${q}`, { signal: AbortSignal.timeout(15000) });
+  if (!img.ok) throw new Error(`streetview ${img.status}`);
+  mkdirSync(SV_DIR, { recursive: true });
+  const file = `${letter.id}.jpg`;
+  writeFileSync(join(SV_DIR, file), Buffer.from(await img.arrayBuffer()));
+  console.log(`[streetview] 「${letter.place}」抓到一张${meta.date ? `（${meta.date}）` : ""}`);
+  return { file, date: meta.date || null };
 }
 
 // ── 位置：手机上报的一帧 → 记足迹、记最后位置、看落没落进哪封信的圈里 ─────────────
@@ -144,9 +163,10 @@ app.post("/api/travel-map/stops", (req, res) => {
 });
 
 // 藏东西：body = 信的正文，voice = { url, text } 自己准备好的音频，badge = { name, emoji, note }
-app.post("/api/travel-map/letters", (req, res) => {
+app.post("/api/travel-map/letters", async (req, res) => {
   try {
     const letter = createLetter(req.body || {});
+    letter.streetView = await captureStreetView(letter).catch((e) => { console.warn("[streetview] 没抓到:", e.message); return null; });
     const map = readMap();
     map.letters.push(letter);
     writeMap(map);
@@ -187,6 +207,7 @@ app.delete("/api/travel-map/:id", (req, res) => {
   const before = map.stops.length + map.letters.length + map.marks.length;
   map.stops = map.stops.filter((s) => s.id !== id);
   map.letters = map.letters.filter((l) => l.id !== id);
+  if (letter?.streetView) rmSync(join(SV_DIR, letter.streetView.file), { force: true });
   map.marks = map.marks.filter((m) => m.id !== id);
   if (map.stops.length + map.letters.length + map.marks.length === before) return res.status(404).json({ error: "没有这个 id" });
   writeMap(map);
@@ -217,6 +238,13 @@ app.post("/api/travel-map/letters/:id/open", (req, res) => {
   }
   writeMap(map);
   res.json({ ok: true, letter: publicLetter(letter) });
+});
+
+// 街景图：只给拆开了的信（id 在页面上看得到，封着的猜 id 也拿不到）
+app.get("/api/travel-map/letters/:id/streetview.jpg", (req, res) => {
+  const letter = readMap().letters.find((l) => l.id === req.params.id);
+  if (!letter?.streetView || letter.status !== "opened") return res.status(404).end();
+  res.sendFile(join(SV_DIR, letter.streetView.file));
 });
 
 // ── 位置上报：三个入口，都落到 ingestFrame ──────────────────────────────────────

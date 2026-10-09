@@ -134,7 +134,8 @@ async function callTool(name, args) {
     });
     const inside = [letter.body && "一封信", letter.voice && "一段语音", letter.badge && `成就 ${letter.badge.emoji} ${letter.badge.name}`].filter(Boolean).join(" + ");
     const times = letter.visitsNeeded > 1 ? `，要来 ${letter.visitsNeeded} 天才解锁` : "";
-    return { content: [{ type: "text", text: `藏好了（${letter.id}）：「${letter.place}」，${inside}，半径 ${letter.radiusM}m${times}。\n地图查到的是：${where.label}\n地图上现在多了一片 ${Math.round(letter.area.r)}m 的模糊圈和谜语「${letter.hint}」。地址不对就 remove_from_map 收回、带 lat/lon 重藏。` }] };
+    const sv = letter.streetView ? `\n街景抓到一张${letter.streetView.date ? `（${letter.streetView.date}）` : ""}，拆开以后详情页里能看到。` : "";
+    return { content: [{ type: "text", text: `藏好了（${letter.id}）：「${letter.place}」，${inside}，半径 ${letter.radiusM}m${times}。\n地图查到的是：${where.label}${sv}\n地图上现在多了一片 ${Math.round(letter.area.r)}m 的模糊圈和谜语「${letter.hint}」。地址不对就 remove_from_map 收回、带 lat/lon 重藏。` }] };
   }
   if (name === "award_badge") {
     const { badge } = await http("POST", "/api/travel-map/badges", { name: args.name, emoji: args.emoji, note: args.note });
@@ -160,6 +161,7 @@ async function callTool(name, args) {
       if (l.body) lines.push(`  信：${l.body}`);
       if (l.voice) lines.push(`  语音：${l.voice.text || l.voice.url}`);
       if (l.badge) lines.push(`  成就：${l.badge.emoji} ${l.badge.name}${l.badge.note ? `（${l.badge.note}）` : ""}`);
+      if (l.streetView) lines.push(`  街景：有${l.streetView.date ? `（${l.streetView.date}）` : ""}`);
     }
     lines.push("", "直接发过的成就：");
     if (!badges.length) lines.push("（还没有）");

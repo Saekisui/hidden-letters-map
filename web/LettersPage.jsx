@@ -801,6 +801,12 @@ function DetailPage({ letter, fresh, audioRef, onClose }) {
         {hasPoint && <p className="lm-dt-meta"><MapPin className="lm-ic" /><b>{coords}</b></p>}
         <p className="lm-dt-meta"><Calendar className="lm-ic" />{date} 拆开</p>
         <p className="lm-dt-quote">{letter.hint}</p>
+        {letter.streetView && (
+          <figure className="lm-dt-photo">
+            <img src={letter.streetView.url} alt={`${letter.place}的街景`} loading="lazy" />
+            <figcaption><span>街景 · <em>Street View</em></span>{letter.streetView.date && <span>{letter.streetView.date.replace("-", " · ")}</span>}</figcaption>
+          </figure>
+        )}
         <div className="lm-dt-sec">
           {letter.body && (
             <>
