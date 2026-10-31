@@ -1,0 +1,24 @@
+hidden-letters-map
+Copyright (C) 2026 Saekisui
+
+This program is free software: you can redistribute it and/or modify it
+under the terms of the GNU Affero General Public License, version 3
+(see LICENSE), together with the additional term below.
+
+Additional term under section 7(b) of the GNU AGPL v3
+-----------------------------------------------------
+
+Any work that contains this program, or is based on it, must preserve
+the following author attribution, both in that material (including its
+source files and this NOTICE) and in the Appropriate Legal Notices
+displayed by the work:
+
+    Based on hidden-letters-map by Saekisui - https://github.com/Saekisui/hidden-letters-map
+
+This program is distributed in the hope that it will be useful, but
+WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero
+General Public License for more details.
+
+Versions up to and including commit 8c9e1cb were released under the
+MIT License.
