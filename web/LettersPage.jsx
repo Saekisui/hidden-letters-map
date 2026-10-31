@@ -19,6 +19,7 @@ const TRACK_GAP_MS = 6 * 3600e3; // 足迹两点之间隔这么久（睡觉 / �
 const CONTENT_LABEL = { letter: "信", voice: "语音讲解", badge: "成就" };
 const CONTENT_CLASS = { letter: "t-letter", voice: "t-voice", badge: "t-badge" };
 const TILE = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+const REPO = "https://github.com/Saekisui/hidden-letters-map";
 const wrapLon = (lon) => ((((lon + 180) % 360) + 360) % 360) - 180; // 展开过的经度收回 -180…180 给人看
 const esc = (t) => String(t).replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
 const mmss = (sec) => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, "0")}`;
@@ -247,7 +248,8 @@ export default function LettersPage() {
   useEffect(() => {
     const map = L.map(elRef.current, { zoomControl: false, attributionControl: false }).setView([35.68, 139.76], 3);
     L.tileLayer(TILE, { maxZoom: 19, attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' }).addTo(map);
-    L.control.attribution({ position: "topright", prefix: false }).addTo(map); // 底下有卡片，署名挪到右上
+    // 底下有卡片，署名挪到右上；前缀是本项目的署名和许可证（AGPL 的 Appropriate Legal Notices，改版要保留，见 NOTICE）
+    L.control.attribution({ position: "topright", prefix: `<a href="${REPO}">hidden-letters-map</a> © 2026 Saekisui · <a href="${REPO}/blob/main/LICENSE">AGPL-3.0</a>，无担保` }).addTo(map);
     layerRef.current = L.layerGroup().addTo(map);
     meLayerRef.current = L.layerGroup().addTo(map);
     map.on("click", () => { setSelected(null); setNote(""); });
