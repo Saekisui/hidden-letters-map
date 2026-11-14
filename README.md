@@ -1,5 +1,7 @@
 # 藏宝地图 · hidden-letters-map
 
+**简体中文** | [日本語](README.ja.md)
+
 <p align="center"><img src="docs/cover.png" alt="藏宝地图：把信、语音、成就藏在真实的地方，对方走到附近才拿得到" width="100%"></p>
 
 <p align="center"><a href="https://saekisui.github.io/hidden-letters-map/demo/"><b>手机上试玩 ↗</b></a>（假数据，不用装任何东西）</p>
